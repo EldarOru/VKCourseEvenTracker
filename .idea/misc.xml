@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/activity_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/app_info_container.xml" value="0.264" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/bottom_navigation_fragment.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/create_event_fragment.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/login_fragment.xml" value="0.2" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/main_event_fragment.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/registration_fragment.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/menu/botton_navigation_menu.xml" value="0.1875" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8 (3)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
