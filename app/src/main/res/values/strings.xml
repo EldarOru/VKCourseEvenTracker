@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">EvenTracker</string>
     <string name="write_your_login">Write your login</string>
-    <string name="write_your_password">Write your password</string>
+
     <string name="login">Login</string>
     <string name="register_text">Click, if you want to register</string>
     <string name="created_by_e_team">Created by E-Team</string>
+    <string name="registration">Registration</string>
+    <string name="write_your_name">Write your name</string>
+    <string name="write_your_password">Write your password</string>
+    <string name="repeat_your_password">Repeat your password</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="confirm">Confirm</string>
+    <string name="back">Back</string>
 </resources>

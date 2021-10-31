@@ -26,8 +26,12 @@ class LoginFragment: Fragment() {
                 ?.replace(R.id.main_container, MainEventFragment())
                 ?.replace(R.id.bottom_container, BottomNavigationFragment())
                 ?.commit()
-            //change
         }
-
+        loginFragmentBinding?.registrationButton?.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.main_container, RegistrationFragment())
+                ?.commit()
+        }
     }
+    //change everything
 }
