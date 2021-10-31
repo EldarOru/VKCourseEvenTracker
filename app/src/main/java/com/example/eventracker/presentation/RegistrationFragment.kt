@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.eventracker.databinding.MainEventFragmentBinding
 import com.example.eventracker.databinding.RegistrationFragmentBinding
 
 class RegistrationFragment: Fragment() {

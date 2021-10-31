@@ -35,7 +35,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/write_your_password"
+        android:hint="@string/write_your_email"
         android:gravity="center"
         android:inputType="textEmailAddress"
         android:id="@+id/email_et"

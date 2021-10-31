@@ -29,6 +29,7 @@ class LoginFragment: Fragment() {
         }
         loginFragmentBinding?.registrationButton?.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
+                ?.addToBackStack(null)
                 ?.replace(R.id.main_container, RegistrationFragment())
                 ?.commit()
         }
