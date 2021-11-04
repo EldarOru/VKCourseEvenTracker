@@ -2,9 +2,9 @@ package com.example.eventracker.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import com.example.eventracker.R
 import com.example.eventracker.databinding.ActivityMainBinding
+import com.example.eventracker.presentation.fragments.AppInfoFragment
+import com.example.eventracker.presentation.fragments.LoginFragment
 
 class MainActivity : AppCompatActivity() {
     var binding: ActivityMainBinding? = null

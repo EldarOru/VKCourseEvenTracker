@@ -1,4 +1,4 @@
-package com.example.eventracker.presentation
+package com.example.eventracker.presentation.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
