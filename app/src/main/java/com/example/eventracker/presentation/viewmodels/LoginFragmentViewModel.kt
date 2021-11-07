@@ -13,6 +13,7 @@ import retrofit2.Response
 import java.io.IOException
 
 class LoginFragmentViewModel: ViewModel() {
+
     fun authorization (login: String, password: String): Boolean{
         var flag = false
         GlobalScope.launch(Dispatchers.IO) {

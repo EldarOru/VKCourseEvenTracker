@@ -1,5 +1,6 @@
 package com.example.eventracker.presentation.fragments
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.eventracker.R
+import com.example.eventracker.data.GeneralRepository
 import com.example.eventracker.databinding.RegistrationFragmentBinding
 import com.example.eventracker.presentation.viewmodels.LoginFragmentViewModel
 import com.example.eventracker.presentation.viewmodels.RegistrationFragmentViewModel
@@ -26,6 +28,7 @@ class RegistrationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /*
         registrationFragmentViewModel = ViewModelProvider(this)[RegistrationFragmentViewModel::class.java]
         registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {
             if (registrationFragmentViewModel.registration(
@@ -38,8 +41,19 @@ class RegistrationFragment: Fragment() {
                 Toast.makeText(activity,"Something is wrong", Toast.LENGTH_LONG).show()
             }
         }
+
+         */
         registrationFragmentBinding?.backLoginActivity?.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }
+
+
+        registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {
+            val generalRepository = GeneralRepository(this.context)
+            generalRepository.register(registrationFragmentBinding!!.emailEt.text.toString(),
+                registrationFragmentBinding!!.passwordEt.text.toString())
+        }
     }
+
+
 }

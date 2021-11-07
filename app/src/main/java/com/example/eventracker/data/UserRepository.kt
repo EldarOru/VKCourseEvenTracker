@@ -1,4 +1,5 @@
 package com.example.eventracker.data
 
-class UserRepository {
+class UserRepository{
+
 }
