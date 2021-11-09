@@ -1,5 +1,6 @@
 package com.example.eventracker.presentation.fragments
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class LoginFragment: Fragment() {
 
          */
         //TODO
-        generalRepository = GeneralRepository(this.context)
+        generalRepository = GeneralRepository(this.requireActivity().application)
         generalRepository.getUserLiveData()?.observe(viewLifecycleOwner){
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_container, MainEventFragment())

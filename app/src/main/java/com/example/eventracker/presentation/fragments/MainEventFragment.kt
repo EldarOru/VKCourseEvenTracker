@@ -1,5 +1,6 @@
 package com.example.eventracker.presentation.fragments
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +25,12 @@ class MainEventFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        generalRepository = GeneralRepository(this.context)
+        generalRepository = GeneralRepository(this.requireActivity().application)
         Toast.makeText(this.context, generalRepository.getUserLiveData()?.value?.email.toString(), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        generalRepository.logOut()
     }
 }

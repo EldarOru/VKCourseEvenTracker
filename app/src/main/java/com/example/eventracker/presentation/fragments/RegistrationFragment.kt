@@ -47,9 +47,8 @@ class RegistrationFragment: Fragment() {
             activity?.supportFragmentManager?.popBackStack()
         }
 
-
         registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {
-            val generalRepository = GeneralRepository(this.context)
+            val generalRepository = GeneralRepository(this.requireActivity().application)
             generalRepository.register(registrationFragmentBinding!!.emailEt.text.toString(),
                 registrationFragmentBinding!!.passwordEt.text.toString())
         }
