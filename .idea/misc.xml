@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/activity_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/add_event_fragment.xml" value="0.24230072463768115" />
         <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/app_info_container.xml" value="0.264" />
         <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/bottom_navigation_fragment.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/macdo/AndroidStudioProjects/EvenTracker/app/src/main/res/layout/create_event_fragment.xml" value="0.13020833333333334" />

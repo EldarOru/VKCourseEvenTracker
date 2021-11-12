@@ -4,8 +4,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 data class Event(
-    val data: Date,
-    val name: String,
-    val members: ArrayList<User>
+    val creator: String = "",
+    val data: Date? = null,
+    val name: String = "",
+    val description: String = "",
+    val members: ArrayList<User> = arrayListOf()
 ) {
 }

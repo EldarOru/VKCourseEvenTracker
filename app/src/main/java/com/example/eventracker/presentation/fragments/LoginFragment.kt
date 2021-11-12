@@ -16,7 +16,6 @@ import com.example.eventracker.presentation.viewmodels.LoginFragmentViewModel
 class LoginFragment: Fragment() {
     private lateinit var loginFragmentViewModel: LoginFragmentViewModel
     private var loginFragmentBinding: LoginFragmentBinding? = null
-    private lateinit var generalRepository: GeneralRepository
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,6 +27,8 @@ class LoginFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loginFragmentViewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
+
         /*
         loginFragmentViewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
         loginFragmentBinding?.loginButton?.setOnClickListener {
@@ -45,8 +46,7 @@ class LoginFragment: Fragment() {
 
          */
         //TODO
-        generalRepository = GeneralRepository(this.requireActivity().application)
-        generalRepository.getUserLiveData()?.observe(viewLifecycleOwner){
+        loginFragmentViewModel.getUserLiveData()?.observe(viewLifecycleOwner){
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_container, MainEventFragment())
                 ?.replace(R.id.bottom_container, BottomNavigationFragment())
@@ -54,7 +54,7 @@ class LoginFragment: Fragment() {
         }
 
         loginFragmentBinding?.loginButton?.setOnClickListener {
-            generalRepository.login(loginFragmentBinding!!.loginEdittext.text.toString(),
+            loginFragmentViewModel.login(loginFragmentBinding!!.loginEdittext.text.toString(),
                 loginFragmentBinding!!.passwordEdittext.text.toString())
         }
 
@@ -65,5 +65,7 @@ class LoginFragment: Fragment() {
                 ?.commit()
         }
     }
+
+
     //change everything
 }

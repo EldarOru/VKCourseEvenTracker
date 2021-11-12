@@ -28,6 +28,7 @@ class RegistrationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registrationFragmentViewModel = ViewModelProvider(this)[RegistrationFragmentViewModel::class.java]
         /*
         registrationFragmentViewModel = ViewModelProvider(this)[RegistrationFragmentViewModel::class.java]
         registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {
@@ -43,14 +44,23 @@ class RegistrationFragment: Fragment() {
         }
 
          */
+        registrationFragmentViewModel.shouldCloseScreen.observe(viewLifecycleOwner){
+            activity?.supportFragmentManager?.popBackStack()
+        }
+
         registrationFragmentBinding?.backLoginActivity?.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }
 
         registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {
-            val generalRepository = GeneralRepository(this.requireActivity().application)
-            generalRepository.register(registrationFragmentBinding!!.emailEt.text.toString(),
-                registrationFragmentBinding!!.passwordEt.text.toString())
+            val name: String = registrationFragmentBinding!!.nameEt.text.toString()
+            val email: String = registrationFragmentBinding!!.emailEt.text.toString()
+            val password: String = registrationFragmentBinding!!.passwordEt.text.toString()
+            if (registrationFragmentViewModel.checkInput(name, email, password)) {
+                registrationFragmentBinding?.progressBarRegister!!.visibility = View.GONE
+                registrationFragmentViewModel.register(name, email, password)
+                //registrationFragmentViewModel.finishWork()
+            }else Toast.makeText(this.context, "Incorrect input", Toast.LENGTH_SHORT).show()
         }
     }
 
