@@ -27,6 +27,7 @@ class GeneralRepository(private val application: Application) {
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseUserLiveData = MutableLiveData()
         loggedOutLiveData = MutableLiveData()
+        userLiveDatabase = MutableLiveData()
         database = FirebaseDatabase.getInstance("https://eventracker-c501a-default-rtdb.europe-west1.firebasedatabase.app/").reference
         if (firebaseAuth?.currentUser != null) {
             firebaseUserLiveData?.value = firebaseAuth?.currentUser
