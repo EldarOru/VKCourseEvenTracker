@@ -28,7 +28,9 @@ class GeneralRepository(private val application: Application) {
         firebaseUserLiveData = MutableLiveData()
         loggedOutLiveData = MutableLiveData()
         userLiveDatabase = MutableLiveData()
-        database = FirebaseDatabase.getInstance("https://eventracker-c501a-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        database = FirebaseDatabase
+            .getInstance("https://eventracker-c501a-default-rtdb.europe-west1.firebasedatabase.app/")
+            .reference
         if (firebaseAuth?.currentUser != null) {
             firebaseUserLiveData?.value = firebaseAuth?.currentUser
             getUserFromDatabase()
@@ -85,24 +87,28 @@ class GeneralRepository(private val application: Application) {
         loggedOutLiveData!!.postValue(true)
     }
 
-    fun createNewEvent(eventName: String, eventDescription: String){
+    fun createNewEvent(eventName: String, eventDescription: String, date: String){
+        val key = database?.push()?.key.toString()
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.child("events")
-                //TODO(CHANGE)
-            ?.child(eventName.hashCode().toString())
-            ?.setValue(Event(userLiveDatabase?.value!!.login, Date(), eventName, eventDescription))
+                //TODO CHANGE KEY
+            ?.child(key)
+            ?.setValue(Event(key,userLiveDatabase?.value!!.login, date, eventName, eventDescription))
 
     }
 
     //TODO CHANGE THREAD
     private fun getUserFromDatabase(){
         var user = User()
-        database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.addValueEventListener(object :ValueEventListener{
+        database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
+            ?.addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val arrayEvent = arrayListOf<Event>()
                 for (snapshotOne in snapshot.child("events").children){
                     arrayEvent.add(Event(creator = snapshotOne.child("creator").value.toString(),
                     name = snapshotOne.child("name").value.toString(),
-                    description = snapshotOne.child("description").value.toString()))
+                    description = snapshotOne.child("description").value.toString(),
+                    date = snapshotOne.child("date").value.toString(),
+                    key = snapshotOne.child("key").value.toString()))
                 }
                 user = User(login = snapshot.child("login").value.toString(),
                 email = snapshot.child("email").value.toString(),
@@ -116,6 +122,11 @@ class GeneralRepository(private val application: Application) {
                     Toast.LENGTH_SHORT ).show()
             }
         })
+    }
+
+    fun deleteEvent(event: Event){
+        database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
+            ?.child("events")?.child(event.key)?.removeValue()
     }
 
     fun getUserLiveDatabase(): MutableLiveData<User>?{

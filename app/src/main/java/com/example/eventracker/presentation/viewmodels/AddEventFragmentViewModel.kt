@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.eventracker.data.GeneralRepository
 import com.google.firebase.auth.FirebaseUser
+import java.util.*
 
 class AddEventFragmentViewModel(application: Application): AndroidViewModel(application) {
     private var generalRepository: GeneralRepository? = null
@@ -15,7 +16,7 @@ class AddEventFragmentViewModel(application: Application): AndroidViewModel(appl
         userLiveData = generalRepository?.getUserLiveData()
     }
 
-    fun createNewEvent(eventName: String, eventDescription: String){
-        generalRepository?.createNewEvent(eventName, eventDescription)
+    fun createNewEvent(eventName: String, eventDescription: String, date: String){
+        generalRepository?.createNewEvent(eventName, eventDescription, date)
     }
 }

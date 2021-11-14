@@ -11,7 +11,9 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.eventracker.R
 import com.example.eventracker.data.GeneralRepository
 import com.example.eventracker.databinding.LoginFragmentBinding
@@ -41,6 +43,7 @@ class MainEventFragment: Fragment() {
         mainFragmentViewModel.getUserLiveDatabase()?.observe(viewLifecycleOwner){
             eventListAdapter.list = it.listOfEvents
         }
+
         mainEventFragmentBinding?.buttonAddEvent?.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()
                 ?.addToBackStack(null)
@@ -48,7 +51,7 @@ class MainEventFragment: Fragment() {
                 ?.commit()
         }
     }
-
+    //TODO CHANGE
     override fun onDestroy() {
         super.onDestroy()
         mainFragmentViewModel.logOut()
@@ -60,6 +63,26 @@ class MainEventFragment: Fragment() {
         eventListAdapter = EventListAdapter()
         //eventListAdapter.list = mainFragmentViewModel.user!!.listOfEvents
         recyclerView?.adapter = eventListAdapter
+        setupSwipeListener(recyclerView as RecyclerView)
 
+    }
+
+    private fun setupSwipeListener(recyclerView: RecyclerView) {
+        val myCallBack = object : ItemTouchHelper.SimpleCallback(0,
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
+            override fun onMove(recyclerView: RecyclerView,
+                                viewHolder: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = eventListAdapter.list[viewHolder.adapterPosition]
+                Toast.makeText(context, item.toString(), Toast.LENGTH_LONG).show()
+                mainFragmentViewModel.deleteEvent(item)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(myCallBack)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 }

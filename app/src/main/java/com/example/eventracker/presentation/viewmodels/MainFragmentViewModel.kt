@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.eventracker.data.GeneralRepository
+import com.example.eventracker.domain.Event
 import com.example.eventracker.domain.User
 import com.google.firebase.auth.FirebaseUser
 
@@ -27,5 +28,9 @@ class MainFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     fun getUserLiveDatabase(): MutableLiveData<User>?{
         return userLiveDatabase
+    }
+
+    fun deleteEvent(event: Event){
+        generalRepository?.deleteEvent(event)
     }
 }

@@ -22,6 +22,7 @@ class EventListAdapter: RecyclerView.Adapter<EventListAdapter.EventItemViewHolde
     override fun onBindViewHolder(holder: EventItemViewHolder, position: Int) {
         val event = list[position]
         holder.eventBinding.eventNameEt.text = event.name
+        holder.eventBinding.eventDateEt.text = event.date
         holder.eventBinding.eventDescriptionEt.text = event.description
     }
 
