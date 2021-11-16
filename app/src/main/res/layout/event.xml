@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="8dp"
-    android:layout_marginLeft="8dp"
     android:layout_marginTop="4dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="4dp"
@@ -21,6 +20,7 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/event_name_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -29,6 +29,7 @@
         </TextView>
 
         <TextView
+            android:id="@+id/event_date_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Дата">
@@ -36,6 +37,7 @@
         </TextView>
 
         <TextView
+            android:id="@+id/event_description_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Описание: Ночь, улица, фонарь, аптека,
