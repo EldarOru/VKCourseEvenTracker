@@ -18,6 +18,7 @@ import java.text.DateFormat
 import java.util.*
 
 class GeneralRepository(private val application: Application) {
+    //TODO GOD OBJECT, CHANGE ARCHITECTURE
     private var firebaseAuth: FirebaseAuth? = null
     private var database: DatabaseReference? = null
     private var firebaseUserLiveData: MutableLiveData<FirebaseUser>? = null

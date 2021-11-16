@@ -60,7 +60,7 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
         datePickerDialog.show()
     }
 
-    //TODO CHANGE
+    //TODO DO NORMAL DATE, NOT STRING
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val dateFormat = SimpleDateFormat("dd MMM yyyy")
         val gregorianCalendar = GregorianCalendar(year, month, dayOfMonth)

@@ -8,6 +8,7 @@ import com.example.eventracker.domain.Event
 
 class EventListAdapter: RecyclerView.Adapter<EventListAdapter.EventItemViewHolder>() {
 
+    //TODO CHANGE UPDATE
     var list = listOf<Event>()
     set(value) {
         field = value

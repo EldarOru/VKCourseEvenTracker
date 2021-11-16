@@ -62,7 +62,6 @@ class MainEventFragment: Fragment() {
         val recyclerView = mainEventFragmentBinding?.eventList
         recyclerView?.layoutManager = LinearLayoutManager(context)
         eventListAdapter = EventListAdapter()
-        //eventListAdapter.list = mainFragmentViewModel.user!!.listOfEvents
         recyclerView?.adapter = eventListAdapter
         setupSwipeListener(recyclerView as RecyclerView)
 
