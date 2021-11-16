@@ -13,6 +13,7 @@ import com.example.eventracker.domain.User
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import java.text.DateFormat
 import java.util.*
 
@@ -22,8 +23,9 @@ class GeneralRepository(private val application: Application) {
     private var firebaseUserLiveData: MutableLiveData<FirebaseUser>? = null
     private var loggedOutLiveData: MutableLiveData<Boolean>? = null
     private var userLiveDatabase: MutableLiveData<User>? = null
-
+    private var shouldPopBackStack: MutableLiveData<Unit>? = null
     init {
+        shouldPopBackStack = MutableLiveData()
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseUserLiveData = MutableLiveData()
         loggedOutLiveData = MutableLiveData()
@@ -38,6 +40,9 @@ class GeneralRepository(private val application: Application) {
         }
     }
 
+    fun getPop(): MutableLiveData<Unit>?{
+        return shouldPopBackStack
+    }
     fun login(email: String, password: String){
         firebaseAuth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -56,6 +61,7 @@ class GeneralRepository(private val application: Application) {
                 if (it.isSuccessful){
                     Toast.makeText(application.applicationContext,"Success", Toast.LENGTH_SHORT ).show()
                     addToDatabase(name, email)
+                    shouldPopBackStack?.value = Unit
                 }
                 else Toast.makeText(application.applicationContext,
                     "Login failure: ${it.exception?.localizedMessage}",
@@ -98,7 +104,7 @@ class GeneralRepository(private val application: Application) {
 
     //TODO CHANGE THREAD
     private fun getUserFromDatabase(){
-        var user = User()
+        var user: User
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
             ?.addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -118,7 +124,7 @@ class GeneralRepository(private val application: Application) {
 
             }
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(application.applicationContext,"Login failure: ${error.message}",
+                Toast.makeText(application.applicationContext,"Failure: ${error.message}",
                     Toast.LENGTH_SHORT ).show()
             }
         })

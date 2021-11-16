@@ -40,6 +40,7 @@ class MainEventFragment: Fragment() {
         mainFragmentViewModel = ViewModelProvider(this)[MainFragmentViewModel::class.java]
         Toast.makeText(this.context, mainFragmentViewModel.getUserLiveData()?.value?.email.toString(), Toast.LENGTH_SHORT).show()
         setRecyclerView()
+
         mainFragmentViewModel.getUserLiveDatabase()?.observe(viewLifecycleOwner){
             eventListAdapter.list = it.listOfEvents
         }
@@ -80,6 +81,7 @@ class MainEventFragment: Fragment() {
                 val item = eventListAdapter.list[viewHolder.adapterPosition]
                 Toast.makeText(context, item.toString(), Toast.LENGTH_LONG).show()
                 mainFragmentViewModel.deleteEvent(item)
+                Toast.makeText(context, mainFragmentViewModel.getUserLiveDatabase()?.value.toString(), Toast.LENGTH_LONG).show()
             }
         }
         val itemTouchHelper = ItemTouchHelper(myCallBack)

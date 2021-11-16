@@ -34,12 +34,14 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
 
         //TODO CHECK INPUT
         addEventFragmentBinding?.saveButton?.setOnClickListener {
-            addEventFragmentViewModel.createNewEvent(
-                addEventFragmentBinding?.eventNameEt?.text.toString(),
-                addEventFragmentBinding?.eventDescriptionEt?.text.toString(),
-                addEventFragmentBinding?.eventDateEt?.text.toString()
-            )
-            Toast.makeText(this.context, "Success", Toast.LENGTH_SHORT).show()
+            val eventName: String = addEventFragmentBinding?.eventNameEt?.text.toString()
+            val eventDescription: String = addEventFragmentBinding?.eventDescriptionEt?.text.toString()
+            val date: String = addEventFragmentViewModel.checkDate(addEventFragmentBinding?.eventDateEt?.text.toString())
+            if (addEventFragmentViewModel.checkInput(eventName, eventDescription)) {
+                addEventFragmentViewModel.createNewEvent(
+                    eventName, eventDescription, date)
+                Toast.makeText(this.context, "Success", Toast.LENGTH_SHORT).show()
+            }else Toast.makeText(this.context, "Something is wrong", Toast.LENGTH_SHORT).show()
         }
 
         addEventFragmentBinding?.eventDateEt?.setOnClickListener {
@@ -58,6 +60,7 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
         datePickerDialog.show()
     }
 
+    //TODO CHANGE
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val dateFormat = SimpleDateFormat("dd MMM yyyy")
         val gregorianCalendar = GregorianCalendar(year, month, dayOfMonth)

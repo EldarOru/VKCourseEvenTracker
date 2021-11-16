@@ -24,14 +24,12 @@ class RegistrationFragmentViewModel(application: Application): AndroidViewModel(
     private val emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z]+\\.+[a-z]+"
     private var generalRepository: GeneralRepository? = null
     private var userLiveData: MutableLiveData<FirebaseUser>? = null
-
-    private val _shouldCloseScreen = MutableLiveData<Unit>()
-    val shouldCloseScreen: LiveData<Unit>
-        get() = _shouldCloseScreen
+    var shouldCloseScreen: MutableLiveData<Unit>? = null
 
     init {
         generalRepository = GeneralRepository(application)
         userLiveData = generalRepository?.getUserLiveData()
+        shouldCloseScreen = generalRepository?.getPop()
     }
 
     fun register(name: String, email: String, password: String){
@@ -43,13 +41,12 @@ class RegistrationFragmentViewModel(application: Application): AndroidViewModel(
         return userLiveData
     }
 
-    fun checkInput(name: String, email: String, password: String): Boolean{
-        return email.matches(emailPattern.toRegex()) && password.length > 2 && name.length > 2
+    fun checkInput(name: String, email: String, password: String, repeatPassword: String): Boolean{
+        return email.matches(emailPattern.toRegex()) &&
+                password.length > 2 && name.length > 2 &&
+                password == repeatPassword
     }
 
-    fun finishWork(){
-        _shouldCloseScreen.value = Unit
-    }
 /*
     fun registration(login: String, email: String, password: String, repeatPassword: String): Boolean{
         mAuth = FirebaseAuth.getInstance()

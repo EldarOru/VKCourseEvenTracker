@@ -44,7 +44,7 @@ class RegistrationFragment: Fragment() {
         }
 
          */
-        registrationFragmentViewModel.shouldCloseScreen.observe(viewLifecycleOwner){
+        registrationFragmentViewModel.shouldCloseScreen?.observe(viewLifecycleOwner){
             activity?.supportFragmentManager?.popBackStack()
         }
 
@@ -56,7 +56,8 @@ class RegistrationFragment: Fragment() {
             val name: String = registrationFragmentBinding!!.nameEt.text.toString()
             val email: String = registrationFragmentBinding!!.emailEt.text.toString()
             val password: String = registrationFragmentBinding!!.passwordEt.text.toString()
-            if (registrationFragmentViewModel.checkInput(name, email, password)) {
+            val repeatPassword: String = registrationFragmentBinding!!.repeatPasswordEt.text.toString()
+            if (registrationFragmentViewModel.checkInput(name, email, password, repeatPassword)) {
                 registrationFragmentBinding?.progressBarRegister!!.visibility = View.GONE
                 registrationFragmentViewModel.register(name, email, password)
                 //registrationFragmentViewModel.finishWork()
