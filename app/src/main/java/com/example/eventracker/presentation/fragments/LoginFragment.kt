@@ -54,8 +54,12 @@ class LoginFragment: Fragment() {
         }
 
         loginFragmentBinding?.loginButton?.setOnClickListener {
-            loginFragmentViewModel.login(loginFragmentBinding!!.loginEdittext.text.toString(),
-                loginFragmentBinding!!.passwordEdittext.text.toString())
+            val email = loginFragmentBinding!!.loginEdittext.text.toString().trim()
+            val password = loginFragmentBinding!!.passwordEdittext.text.toString().trim()
+
+            if(loginFragmentViewModel.checkInput(email, password)) {
+                loginFragmentViewModel.login(email, password)
+            }else Toast.makeText(context, "Incorrect input", Toast.LENGTH_SHORT).show()
         }
 
         loginFragmentBinding?.registrationButton?.setOnClickListener {
