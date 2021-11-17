@@ -3,59 +3,85 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <EditText
-        android:id="@+id/event_name_et"
-        android:hint="Event"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/event_description_et"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintVertical_chainStyle="packed">
-    </EditText>
-
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/event_description_et"
-        app:layout_constraintTop_toBottomOf="@+id/event_name_et"
-        app:layout_constraintBottom_toTopOf="@+id/event_date_et"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:hint="Description"/>
+    android:layout_height="match_parent"
+    android:padding="30dp">
 
     <TextView
-        android:gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:text="Click here to choose date"
+        android:id="@+id/create_new_event_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/event_date_et"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_description_et"
-        app:layout_constraintBottom_toTopOf="@+id/save_button"
-        app:layout_constraintVertical_chainStyle="packed"/>
-    <Button
+        android:gravity="center"
+        android:text="Create new event"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="450dp"/>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="60dp"
+        android:id="@+id/event_name_til"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        app:layout_constraintBottom_toTopOf="@+id/event_description_til"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_new_event_tv">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/event_name_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/event_description_til"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Description"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_name_til"
+        app:layout_constraintBottom_toTopOf="@+id/event_date_et">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/event_description_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/event_date_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:text="Click here to choose date"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_description_til"
+        app:layout_constraintBottom_toTopOf="@+id/save_button"
+        android:background="@drawable/create_new_event_date_bg"/>
+
+
+    <Button
+        android:layout_marginTop="60dp"
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="32sp"
+        android:text="Create"
+        app:layout_constraintTop_toBottomOf="@+id/event_date_et"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="Save">
+        app:layout_constraintStart_toStartOf="parent">
 
     </Button>
 </androidx.constraintlayout.widget.ConstraintLayout>
