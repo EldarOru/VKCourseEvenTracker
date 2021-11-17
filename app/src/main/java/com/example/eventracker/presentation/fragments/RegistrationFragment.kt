@@ -53,10 +53,10 @@ class RegistrationFragment: Fragment() {
         }
 
         registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {
-            val name: String = registrationFragmentBinding!!.nameEt.text.toString()
-            val email: String = registrationFragmentBinding!!.emailEt.text.toString()
-            val password: String = registrationFragmentBinding!!.passwordEt.text.toString()
-            val repeatPassword: String = registrationFragmentBinding!!.repeatPasswordEt.text.toString()
+            val name: String = registrationFragmentBinding!!.nameEt.text.toString().trim()
+            val email: String = registrationFragmentBinding!!.emailEt.text.toString().trim()
+            val password: String = registrationFragmentBinding!!.passwordEt.text.toString().trim()
+            val repeatPassword: String = registrationFragmentBinding!!.repeatPasswordEt.text.toString().trim()
             if (registrationFragmentViewModel.checkInput(name, email, password, repeatPassword)) {
                 registrationFragmentBinding?.progressBarRegister!!.visibility = View.GONE
                 registrationFragmentViewModel.register(name, email, password)

@@ -28,20 +28,16 @@ class LoginFragmentViewModel(application: Application): AndroidViewModel(applica
         userLiveData = generalRepository?.getUserLiveData()
     }
 
-    fun login(email: String, password: String): Boolean{
-        if (checkLoginData(email, password)){
+    fun login(email: String, password: String){
             generalRepository?.login(email, password)
-            return true
-        }
-        else return false
     }
 
     fun getUserLiveData(): MutableLiveData<FirebaseUser>? {
         return userLiveData
     }
 
-    fun checkLoginData(email: String, password: String): Boolean{
-        return email.isNotEmpty() && password.isNotEmpty()
+    fun checkInput(email: String, password: String): Boolean{
+        return email.length > 1 && password.length > 1
     }
     /*
     fun authorization (login: String, password: String): Boolean{
