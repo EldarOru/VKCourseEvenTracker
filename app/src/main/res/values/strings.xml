@@ -17,4 +17,8 @@
     <string name="invitations">Invitations</string>
     <string name="my_events">My events</string>
     <string name="write_your_email">Write your email</string>
+    <string name="error_email">Incorrect email</string>
+    <string name="error_password">Incorrect password</string>
+    <string name="error_name">Incorrect password</string>
+    <string name="error_repeat_password">Passwords do not match</string>
 </resources>

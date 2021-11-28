@@ -3,22 +3,25 @@ package com.example.eventracker.presentation.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.eventracker.data.GeneralRepository
+import androidx.lifecycle.viewModelScope
+import com.example.eventracker.data.GeneralRepositoryImpl
+import com.example.eventracker.domain.Event
+import com.example.eventracker.domain.usecases.CreateEventUseCase
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AddEventFragmentViewModel(application: Application): AndroidViewModel(application) {
-    private var generalRepository: GeneralRepository? = null
-    private var userLiveData: MutableLiveData<FirebaseUser>? = null
+    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl(application)
+    private val createEventUseCase = CreateEventUseCase(generalRepositoryImpl)
 
-    init {
-        generalRepository = GeneralRepository(application)
-        userLiveData = generalRepository?.getUserLiveData()
-    }
 
-    fun createNewEvent(eventName: String, eventDescription: String, date: String){
-        generalRepository?.createNewEvent(eventName, eventDescription, date)
+    fun createNewEvent(eventName: String, eventDescription: String, date: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            createEventUseCase.createEvent(Event(name = eventName, description = eventDescription, date = date))
+        }
     }
 
     fun checkInput(eventName: String, eventDescription: String): Boolean{

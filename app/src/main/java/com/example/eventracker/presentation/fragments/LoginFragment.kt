@@ -1,7 +1,8 @@
 package com.example.eventracker.presentation.fragments
 
-import android.app.Application
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.eventracker.R
-import com.example.eventracker.data.GeneralRepository
 import com.example.eventracker.databinding.LoginFragmentBinding
 import com.example.eventracker.presentation.viewmodels.LoginFragmentViewModel
 
@@ -28,24 +28,10 @@ class LoginFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loginFragmentViewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
+        observeInput()
+        addTextChangeListeners()
 
-        /*
-        loginFragmentViewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
-        loginFragmentBinding?.loginButton?.setOnClickListener {
-            if (loginFragmentViewModel.authorization(
-                    loginFragmentBinding!!.loginEdittext.text.toString(),
-                    loginFragmentBinding!!.passwordEdittext.text.toString())){
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.main_container, MainEventFragment())
-                    ?.replace(R.id.bottom_container, BottomNavigationFragment())
-                    ?.commit()
-            }else{
-                Toast.makeText(activity,"Something is wrong",Toast.LENGTH_LONG).show()
-            }
-        }
-
-         */
-        //TODO
+        //TODO изменить взаимодействие активити и фрагментов
         loginFragmentViewModel.getUserLiveData()?.observe(viewLifecycleOwner){
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_container, MainEventFragment())
@@ -56,10 +42,8 @@ class LoginFragment: Fragment() {
         loginFragmentBinding?.loginButton?.setOnClickListener {
             val email = loginFragmentBinding!!.loginEdittext.text.toString().trim()
             val password = loginFragmentBinding!!.passwordEdittext.text.toString().trim()
+            loginFragmentViewModel.login(email, password)
 
-            if(loginFragmentViewModel.checkInput(email, password)) {
-                loginFragmentViewModel.login(email, password)
-            }else Toast.makeText(context, "Incorrect input", Toast.LENGTH_SHORT).show()
         }
 
         loginFragmentBinding?.registrationButton?.setOnClickListener {
@@ -71,5 +55,50 @@ class LoginFragment: Fragment() {
     }
 
 
-    //change everything
+
+    private fun observeInput(){
+        loginFragmentViewModel.errorEmail.observe(viewLifecycleOwner) {
+            val message = if (it) {
+                getString(R.string.error_email)
+            } else {
+                null
+            }
+            loginFragmentBinding?.loginTil?.error = message
+        }
+
+        loginFragmentViewModel.errorPassword.observe(viewLifecycleOwner) {
+            val message = if (it) {
+                getString(R.string.error_password)
+            } else {
+                null
+            }
+            loginFragmentBinding?.passwordTil?.error = message
+        }
+    }
+
+    private fun addTextChangeListeners(){
+        loginFragmentBinding!!.loginEdittext.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                loginFragmentViewModel.resetErrorEmail()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        loginFragmentBinding!!.passwordEdittext.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                loginFragmentViewModel.resetErrorPassword()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+    }
 }

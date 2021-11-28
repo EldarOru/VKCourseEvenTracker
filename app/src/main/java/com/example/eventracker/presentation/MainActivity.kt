@@ -16,6 +16,13 @@ class MainActivity : AppCompatActivity() {
             .replace(binding?.mainContainer!!.id, LoginFragment())
             .replace(binding?.bottomContainer!!.id, AppInfoFragment())
             .commit()
-
     }
+
+    /*
+    override fun onBackPressed() {
+        super.onBackPressed()
+        supportFragmentManager.popBackStack()
+    }
+
+     */
 }

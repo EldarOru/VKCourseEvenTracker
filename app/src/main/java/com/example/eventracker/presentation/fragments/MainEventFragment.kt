@@ -1,13 +1,9 @@
 package com.example.eventracker.presentation.fragments
 
-import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,12 +11,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eventracker.R
-import com.example.eventracker.data.GeneralRepository
-import com.example.eventracker.databinding.LoginFragmentBinding
 import com.example.eventracker.databinding.MainEventFragmentBinding
 import com.example.eventracker.presentation.adapters.EventListAdapter
 import com.example.eventracker.presentation.viewmodels.MainFragmentViewModel
-import com.example.eventracker.presentation.viewmodels.RegistrationFragmentViewModel
 
 class MainEventFragment: Fragment() {
     private lateinit var eventListAdapter: EventListAdapter
@@ -38,7 +31,7 @@ class MainEventFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainFragmentViewModel = ViewModelProvider(this)[MainFragmentViewModel::class.java]
-        Toast.makeText(this.context, mainFragmentViewModel.getUserLiveData()?.value?.email.toString(), Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this.context, mainFragmentViewModel.getUserLiveData()?.value?.email.toString(), Toast.LENGTH_SHORT).show()
         setRecyclerView()
 
         mainFragmentViewModel.getUserLiveDatabase()?.observe(viewLifecycleOwner){
@@ -79,6 +72,7 @@ class MainEventFragment: Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = eventListAdapter.list[viewHolder.adapterPosition]
                 Toast.makeText(context, item.toString(), Toast.LENGTH_LONG).show()
+
                 mainFragmentViewModel.deleteEvent(item)
                 Toast.makeText(context, mainFragmentViewModel.getUserLiveDatabase()?.value.toString(), Toast.LENGTH_LONG).show()
             }

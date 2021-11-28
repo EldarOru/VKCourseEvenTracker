@@ -1,60 +1,67 @@
 package com.example.eventracker.presentation.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import com.example.eventracker.data.RetrofitClient
-import com.example.eventracker.data.RetrofitServices
-import com.example.eventracker.domain.LoginBody
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Response
-import java.io.IOException
+import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 
 import androidx.lifecycle.MutableLiveData
-import com.example.eventracker.data.GeneralRepository
+import androidx.lifecycle.viewModelScope
+import com.example.eventracker.data.GeneralRepositoryImpl
+import com.example.eventracker.domain.usecases.GetUserAccUseCase
+import com.example.eventracker.domain.usecases.LoginUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class LoginFragmentViewModel(application: Application): AndroidViewModel(application) {
-    private var generalRepository: GeneralRepository? = null
-    private var userLiveData: MutableLiveData<FirebaseUser>? = null
+    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl(application)
+    private val loginUseCase = LoginUseCase(generalRepositoryImpl)
+    private val getUserAccUseCase = GetUserAccUseCase(generalRepositoryImpl)
+    private val userLiveData: LiveData<FirebaseUser> = getUserAccUseCase.getUserAcc()
 
-    init {
-        generalRepository = GeneralRepository(application)
-        userLiveData = generalRepository?.getUserLiveData()
-    }
+    private val _errorEmail = MutableLiveData<Boolean>()
+    val errorEmail: LiveData<Boolean>
+        get() = _errorEmail
+
+    private val _errorPassword = MutableLiveData<Boolean>()
+    val errorPassword: LiveData<Boolean>
+        get() = _errorPassword
+
+
 
     fun login(email: String, password: String){
-            generalRepository?.login(email, password)
+        val validateData = validateInput(email, password)
+        if (validateData) {
+            viewModelScope.launch(Dispatchers.Main) {
+                loginUseCase.login(email, password)
+            }
+        }
     }
 
-    fun getUserLiveData(): MutableLiveData<FirebaseUser>? {
+    fun getUserLiveData(): LiveData<FirebaseUser>? {
         return userLiveData
     }
 
-    fun checkInput(email: String, password: String): Boolean{
-        return email.length > 1 && password.length > 1
-    }
-    /*
-    fun authorization (login: String, password: String): Boolean{
-        var flag = false
-        GlobalScope.launch(Dispatchers.IO) {
-            val response = try {
-                RetrofitClient.retrofitServices.auth(LoginBody(login,password))
-            } catch (ex: IOException){
-                return@launch
-            }
-            if (response.code() == RetrofitServices.CORRECT_AUTO) {
-                flag = true
-                return@launch
-            }
+    private fun validateInput(email: String, password: String): Boolean{
+        var flag = true
+        if (email.isBlank()){
+            _errorEmail.value = true
+            flag = false
+        }
+        if (password.isBlank()){
+            _errorPassword.value = true
+            flag = false
         }
         return flag
     }
-     */
+
+    fun resetErrorEmail(){
+        _errorEmail.value = false
+    }
+
+    fun resetErrorPassword(){
+        _errorPassword.value = false
+    }
 }
 

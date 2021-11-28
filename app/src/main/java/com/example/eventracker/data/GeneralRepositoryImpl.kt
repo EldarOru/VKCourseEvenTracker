@@ -1,7 +1,6 @@
 package com.example.eventracker.data
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -9,22 +8,26 @@ import com.google.firebase.auth.FirebaseAuth
 
 import androidx.lifecycle.MutableLiveData
 import com.example.eventracker.domain.Event
+import com.example.eventracker.domain.GeneralRepository
 import com.example.eventracker.domain.User
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
-import java.text.DateFormat
-import java.util.*
+import kotlinx.coroutines.*
 
-class GeneralRepository(private val application: Application) {
+class GeneralRepositoryImpl(private val application: Application): GeneralRepository {
     //TODO GOD OBJECT, CHANGE ARCHITECTURE
     private var firebaseAuth: FirebaseAuth? = null
     private var database: DatabaseReference? = null
     private var firebaseUserLiveData: MutableLiveData<FirebaseUser>? = null
     private var loggedOutLiveData: MutableLiveData<Boolean>? = null
+
+    //вся инфа
     private var userLiveDatabase: MutableLiveData<User>? = null
+
+    //нужно ли делать popback
     private var shouldPopBackStack: MutableLiveData<Unit>? = null
+
     init {
         shouldPopBackStack = MutableLiveData()
         firebaseAuth = FirebaseAuth.getInstance()
@@ -36,37 +39,50 @@ class GeneralRepository(private val application: Application) {
             .reference
         if (firebaseAuth?.currentUser != null) {
             firebaseUserLiveData?.value = firebaseAuth?.currentUser
-            getUserFromDatabase()
             loggedOutLiveData?.value = false
+            GlobalScope.launch {
+                getUserFromFirebase()
+            }
         }
     }
 
     fun getPop(): MutableLiveData<Unit>?{
         return shouldPopBackStack
     }
-    fun login(email: String, password: String){
+
+    //TODO как передвинуть ошибки от самого firebase я не знаю
+    override suspend fun login(email: String, password: String): Unit = withContext(Dispatchers.IO){
         firebaseAuth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    firebaseUserLiveData?.value = firebaseAuth?.currentUser
+            if (it.isSuccessful) {
+                firebaseUserLiveData?.value = firebaseAuth?.currentUser
+            }
+            else{
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(
+                        application.applicationContext,
+                        "Login failure: ${it.exception?.localizedMessage} ${Thread.currentThread()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                else{
-                    Toast.makeText(application.applicationContext,
-                        "Login failure: ${it.exception?.localizedMessage}",
-                        Toast.LENGTH_SHORT ).show()
             }
         }
     }
 
-    fun register(name: String, email: String, password: String){
+    override suspend fun register(name: String, email: String, password: String){
         firebaseAuth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener {
                 if (it.isSuccessful){
-                    Toast.makeText(application.applicationContext,"Success", Toast.LENGTH_SHORT ).show()
                     addToDatabase(name, email)
                     shouldPopBackStack?.value = Unit
                 }
-                else Toast.makeText(application.applicationContext,
-                    "Login failure: ${it.exception?.localizedMessage}",
-                    Toast.LENGTH_SHORT ).show()
+                else {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(
+                            application.applicationContext,
+                            "Login failure: ${it.exception?.localizedMessage}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
     }
 
@@ -81,10 +97,6 @@ class GeneralRepository(private val application: Application) {
         database?.child("users")?.orderByChild("names")?.equalTo(name)
     }
 
-    fun getUserLiveData(): MutableLiveData<FirebaseUser>? {
-        return firebaseUserLiveData
-    }
-
     fun getLoggedOutLiveData(): MutableLiveData<Boolean>? {
         return loggedOutLiveData
     }
@@ -94,17 +106,14 @@ class GeneralRepository(private val application: Application) {
         loggedOutLiveData!!.postValue(true)
     }
 
-    fun createNewEvent(eventName: String, eventDescription: String, date: String){
+    override suspend fun createEvent(event: Event): Unit = withContext(Dispatchers.IO){
         val key = database?.push()?.key.toString()
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.child("events")
-                //TODO CHANGE KEY
             ?.child(key)
-            ?.setValue(Event(key,userLiveDatabase?.value!!.login, date, eventName, eventDescription))
-
+            ?.setValue(Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description))
     }
 
-    //TODO CHANGE THREAD
-    private fun getUserFromDatabase(){
+    override suspend fun getUserFromFirebase(): Unit = withContext(Dispatchers.IO){
         var user: User
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
             ?.addValueEventListener(object :ValueEventListener{
@@ -121,8 +130,6 @@ class GeneralRepository(private val application: Application) {
                 email = snapshot.child("email").value.toString(),
                 listOfEvents = arrayEvent)
                 userLiveDatabase?.value = user
-                Log.d("KEK",userLiveDatabase!!.value!!.login)
-
             }
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(application.applicationContext,"Failure: ${error.message}",
@@ -131,12 +138,16 @@ class GeneralRepository(private val application: Application) {
         })
     }
 
-    fun deleteEvent(event: Event){
+    override suspend fun deleteEvent(event: Event): Unit = withContext(Dispatchers.IO){
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
             ?.child("events")?.child(event.key)?.removeValue()
     }
 
-    fun getUserLiveDatabase(): MutableLiveData<User>?{
-        return userLiveDatabase
+    override fun getUser(): LiveData<User>{
+        return userLiveDatabase!!
+    }
+
+    override fun getFirebaseUser(): LiveData<FirebaseUser> {
+        return firebaseUserLiveData!!
     }
 }
