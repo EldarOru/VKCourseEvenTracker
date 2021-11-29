@@ -1,24 +1,26 @@
 package com.example.eventracker.presentation.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.eventracker.data.GeneralRepositoryImpl
+import com.example.eventracker.domain.usecases.GetFirebaseInfoUseCase
 import com.example.eventracker.domain.usecases.GetUserAccUseCase
 import com.example.eventracker.domain.usecases.LoginUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class LoginFragmentViewModel(application: Application): AndroidViewModel(application) {
-    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl(application)
+class LoginFragmentViewModel: ViewModel(){
+    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl()
     private val loginUseCase = LoginUseCase(generalRepositoryImpl)
+
     private val getUserAccUseCase = GetUserAccUseCase(generalRepositoryImpl)
     private val userLiveData: LiveData<FirebaseUser> = getUserAccUseCase.getUserAcc()
+
+    private val getFirebaseInfoUseCase = GetFirebaseInfoUseCase(generalRepositoryImpl)
+    private val firebaseInfoLiveData = getFirebaseInfoUseCase.getFirebaseInfo()
 
     private val _errorEmail = MutableLiveData<Boolean>()
     val errorEmail: LiveData<Boolean>
@@ -39,7 +41,11 @@ class LoginFragmentViewModel(application: Application): AndroidViewModel(applica
         }
     }
 
-    fun getUserLiveData(): LiveData<FirebaseUser>? {
+    fun getFirebaseInfoLiveData(): LiveData<String>{
+        return firebaseInfoLiveData
+    }
+
+    fun getUserLiveData(): LiveData<FirebaseUser>{
         return userLiveData
     }
 

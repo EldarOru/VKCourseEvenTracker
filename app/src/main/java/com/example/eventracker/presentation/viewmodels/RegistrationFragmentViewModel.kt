@@ -1,24 +1,24 @@
 package com.example.eventracker.presentation.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.eventracker.data.GeneralRepositoryImpl
+import com.example.eventracker.domain.usecases.GetFirebaseInfoUseCase
 import com.example.eventracker.domain.usecases.GetUserAccUseCase
 import com.example.eventracker.domain.usecases.RegistrationUseCase
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RegistrationFragmentViewModel(application: Application): AndroidViewModel(application) {
-    private val emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z]+\\.+[a-z]+"
-
-    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl(application)
+class RegistrationFragmentViewModel: ViewModel(){
+    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl()
     private val registrationUserCase = RegistrationUseCase(generalRepositoryImpl)
+    private val getFirebaseInfoUseCase = GetFirebaseInfoUseCase(generalRepositoryImpl)
+    private val firebaseInfoLiveData = getFirebaseInfoUseCase.getFirebaseInfo()
+
     private val getUserAccUseCase = GetUserAccUseCase(generalRepositoryImpl)
     private var userLiveData: LiveData<FirebaseUser> = getUserAccUseCase.getUserAcc()
+
     var shouldCloseScreen: MutableLiveData<Unit>? = null
 
     private val _errorName = MutableLiveData<Boolean>()
@@ -54,10 +54,8 @@ class RegistrationFragmentViewModel(application: Application): AndroidViewModel(
         return userLiveData
     }
 
-    fun checkInput(name: String, email: String, password: String, repeatPassword: String): Boolean{
-        return email.matches(emailPattern.toRegex()) &&
-                password.length > 2 && name.length > 2 &&
-                password == repeatPassword
+    fun getFirebaseInfoLiveData(): LiveData<String>{
+        return firebaseInfoLiveData
     }
 
     private fun validateInput(name: String, email: String, password: String, repeatPassword: String): Boolean{

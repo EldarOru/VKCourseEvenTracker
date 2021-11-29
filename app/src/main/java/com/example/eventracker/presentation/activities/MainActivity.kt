@@ -1,4 +1,4 @@
-package com.example.eventracker.presentation
+package com.example.eventracker.presentation.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

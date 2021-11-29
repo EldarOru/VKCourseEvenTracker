@@ -1,4 +1,4 @@
-package com.example.eventracker.domain
+package com.example.eventracker.domain.models
 
 data class User(val login: String = "",
                 val email: String = "",

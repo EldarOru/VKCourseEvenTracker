@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eventracker.databinding.EventBinding
-import com.example.eventracker.domain.Event
+import com.example.eventracker.domain.models.Event
 
 class EventListAdapter: RecyclerView.Adapter<EventListAdapter.EventItemViewHolder>() {
 

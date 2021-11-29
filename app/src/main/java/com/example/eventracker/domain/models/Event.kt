@@ -1,6 +1,6 @@
-package com.example.eventracker.domain
+package com.example.eventracker.domain.models
 
-import java.util.*
+import com.example.eventracker.domain.models.User
 import kotlin.collections.ArrayList
 
 data class Event(
@@ -10,5 +10,4 @@ data class Event(
     val name: String = "",
     val description: String = "",
     val members: ArrayList<User> = arrayListOf()
-) {
-}
+)

@@ -39,6 +39,10 @@ class RegistrationFragment: Fragment() {
             activity?.supportFragmentManager?.popBackStack()
         }
 
+        registrationFragmentViewModel.getFirebaseInfoLiveData().observe(viewLifecycleOwner){
+            Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+        }
+
         registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {
             val name: String = registrationFragmentBinding!!.nameEt.text.toString().trim()
             val email: String = registrationFragmentBinding!!.emailEt.text.toString().trim()
@@ -46,7 +50,6 @@ class RegistrationFragment: Fragment() {
             val repeatPassword: String = registrationFragmentBinding!!.repeatPasswordEt.text.toString().trim()
             registrationFragmentViewModel.register(name, email, password, repeatPassword)
                 //registrationFragmentViewModel.finishWork()
-
         }
     }
 

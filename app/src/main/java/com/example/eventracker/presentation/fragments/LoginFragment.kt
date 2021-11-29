@@ -32,11 +32,15 @@ class LoginFragment: Fragment() {
         addTextChangeListeners()
 
         //TODO изменить взаимодействие активити и фрагментов
-        loginFragmentViewModel.getUserLiveData()?.observe(viewLifecycleOwner){
+        loginFragmentViewModel.getUserLiveData().observe(viewLifecycleOwner){
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.main_container, MainEventFragment())
                 ?.replace(R.id.bottom_container, BottomNavigationFragment())
                 ?.commit()
+        }
+
+        loginFragmentViewModel.getFirebaseInfoLiveData().observe(viewLifecycleOwner){
+            Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         }
 
         loginFragmentBinding?.loginButton?.setOnClickListener {

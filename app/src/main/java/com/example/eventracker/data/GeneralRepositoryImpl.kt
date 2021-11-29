@@ -1,28 +1,34 @@
 package com.example.eventracker.data
 
 import android.app.Application
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseAuth
 
 import androidx.lifecycle.MutableLiveData
-import com.example.eventracker.domain.Event
+import com.example.eventracker.domain.models.Event
 import com.example.eventracker.domain.GeneralRepository
-import com.example.eventracker.domain.User
+import com.example.eventracker.domain.models.User
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.coroutines.*
 
-class GeneralRepositoryImpl(private val application: Application): GeneralRepository {
+class GeneralRepositoryImpl(): GeneralRepository {
     //TODO GOD OBJECT, CHANGE ARCHITECTURE
     private var firebaseAuth: FirebaseAuth? = null
     private var database: DatabaseReference? = null
-    private var firebaseUserLiveData: MutableLiveData<FirebaseUser>? = null
+
+    //инфа о состоянии юзера
     private var loggedOutLiveData: MutableLiveData<Boolean>? = null
 
-    //вся инфа
+    //инфа о юзере из firebase authentication
+    private var firebaseUserLiveData: MutableLiveData<FirebaseUser>? = null
+
+    //инфа о результате выполнения запроса
+    private var firebaseInfoLiveData: MutableLiveData<String>? = null
+
+    //вся инфа о юзере из бд
     private var userLiveDatabase: MutableLiveData<User>? = null
 
     //нужно ли делать popback
@@ -34,6 +40,7 @@ class GeneralRepositoryImpl(private val application: Application): GeneralReposi
         firebaseUserLiveData = MutableLiveData()
         loggedOutLiveData = MutableLiveData()
         userLiveDatabase = MutableLiveData()
+        firebaseInfoLiveData = MutableLiveData()
         database = FirebaseDatabase
             .getInstance("https://eventracker-c501a-default-rtdb.europe-west1.firebasedatabase.app/")
             .reference
@@ -50,46 +57,35 @@ class GeneralRepositoryImpl(private val application: Application): GeneralReposi
         return shouldPopBackStack
     }
 
-    //TODO как передвинуть ошибки от самого firebase я не знаю
     override suspend fun login(email: String, password: String): Unit = withContext(Dispatchers.IO){
         firebaseAuth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener {
             if (it.isSuccessful) {
                 firebaseUserLiveData?.value = firebaseAuth?.currentUser
+                firebaseInfoLiveData?.value = "Success"
             }
             else{
-                CoroutineScope(Dispatchers.Main).launch {
-                    Toast.makeText(
-                        application.applicationContext,
-                        "Login failure: ${it.exception?.localizedMessage} ${Thread.currentThread()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                firebaseInfoLiveData?.value = "Login failure: ${it.exception?.localizedMessage}"
                 }
             }
         }
-    }
 
     override suspend fun register(name: String, email: String, password: String){
         firebaseAuth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener {
                 if (it.isSuccessful){
                     addToDatabase(name, email)
                     shouldPopBackStack?.value = Unit
+                    firebaseInfoLiveData?.value = "Success"
                 }
                 else {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        Toast.makeText(
-                            application.applicationContext,
-                            "Login failure: ${it.exception?.localizedMessage}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    firebaseInfoLiveData?.value = "Login failure: ${it.exception?.localizedMessage}"
                 }
+            }
         }
-    }
 
     private fun addToDatabase(name: String, email: String){
-        database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.setValue(User(
-            name, email
-        ))
+        database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.setValue(
+            User(name, email)
+        )
     }
 
     //TODO
@@ -120,11 +116,13 @@ class GeneralRepositoryImpl(private val application: Application): GeneralReposi
             override fun onDataChange(snapshot: DataSnapshot) {
                 val arrayEvent = arrayListOf<Event>()
                 for (snapshotOne in snapshot.child("events").children){
-                    arrayEvent.add(Event(creator = snapshotOne.child("creator").value.toString(),
+                    arrayEvent.add(
+                        Event(creator = snapshotOne.child("creator").value.toString(),
                     name = snapshotOne.child("name").value.toString(),
                     description = snapshotOne.child("description").value.toString(),
                     date = snapshotOne.child("date").value.toString(),
-                    key = snapshotOne.child("key").value.toString()))
+                    key = snapshotOne.child("key").value.toString())
+                    )
                 }
                 user = User(login = snapshot.child("login").value.toString(),
                 email = snapshot.child("email").value.toString(),
@@ -132,8 +130,7 @@ class GeneralRepositoryImpl(private val application: Application): GeneralReposi
                 userLiveDatabase?.value = user
             }
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(application.applicationContext,"Failure: ${error.message}",
-                    Toast.LENGTH_SHORT ).show()
+                //TODO
             }
         })
     }
@@ -149,5 +146,9 @@ class GeneralRepositoryImpl(private val application: Application): GeneralReposi
 
     override fun getFirebaseUser(): LiveData<FirebaseUser> {
         return firebaseUserLiveData!!
+    }
+
+    override fun getFirebaseInfo(): LiveData<String> {
+        return firebaseInfoLiveData!!
     }
 }
