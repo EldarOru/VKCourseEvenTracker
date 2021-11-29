@@ -15,17 +15,19 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainFragmentViewModel:ViewModel() {
+class MainFragmentViewModel(
+    private val getUserDatabaseUseCase: GetUserDatabaseUseCase,
+    private val deleteEventUseCase: DeleteEventUseCase,
+    private val getUserAccUseCase: GetUserAccUseCase):ViewModel() {
+    //TODO DELETE
     private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl()
 
-    private val getUserDatabaseUseCase = GetUserDatabaseUseCase(generalRepositoryImpl)
     private var userLiveDatabase: LiveData<User> = getUserDatabaseUseCase.getUser()
 
-    private val deleteEventUseCase = DeleteEventUseCase(generalRepositoryImpl)
-
-    private val getUserAccUseCase = GetUserAccUseCase(generalRepositoryImpl)
     private val userLiveData: LiveData<FirebaseUser> = getUserAccUseCase.getUserAcc()
 
+
+    //TODO CHANGE
     fun logOut(){
         generalRepositoryImpl.logOut()
     }

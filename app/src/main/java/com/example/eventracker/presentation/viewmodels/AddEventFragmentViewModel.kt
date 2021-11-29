@@ -12,10 +12,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddEventFragmentViewModel: ViewModel() {
-    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl()
-    private val createEventUseCase = CreateEventUseCase(generalRepositoryImpl)
-
+class AddEventFragmentViewModel(
+    private val createEventUseCase: CreateEventUseCase): ViewModel() {
 
     fun createNewEvent(eventName: String, eventDescription: String, date: String) {
         viewModelScope.launch(Dispatchers.Main) {
@@ -27,7 +25,7 @@ class AddEventFragmentViewModel: ViewModel() {
         return eventName.length > 1 && eventDescription.length > 1
     }
 
-    //TODO
+    //TODO CHANGE EVERYTHING
     fun checkDate(s: String): String{
         val dateFormat = SimpleDateFormat("dd MMM yyyy")
         val gregorianCalendar = GregorianCalendar(Calendar.getInstance().get(Calendar.YEAR),

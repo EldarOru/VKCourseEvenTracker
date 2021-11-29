@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.eventracker.R
 import com.example.eventracker.databinding.RegistrationFragmentBinding
 import com.example.eventracker.presentation.viewmodels.RegistrationFragmentViewModel
+import com.example.eventracker.presentation.viewmodels.ViewModelFactory
 
 class RegistrationFragment: Fragment() {
     private lateinit var registrationFragmentViewModel: RegistrationFragmentViewModel
@@ -27,7 +28,7 @@ class RegistrationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        registrationFragmentViewModel = ViewModelProvider(this)[RegistrationFragmentViewModel::class.java]
+        registrationFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[RegistrationFragmentViewModel::class.java]
         observeInput()
         addTextChangeListeners()
         

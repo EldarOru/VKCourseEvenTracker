@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.eventracker.R
 import com.example.eventracker.databinding.LoginFragmentBinding
 import com.example.eventracker.presentation.viewmodels.LoginFragmentViewModel
+import com.example.eventracker.presentation.viewmodels.ViewModelFactory
 
 class LoginFragment: Fragment() {
     private lateinit var loginFragmentViewModel: LoginFragmentViewModel
@@ -27,7 +28,7 @@ class LoginFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginFragmentViewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
+        loginFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[LoginFragmentViewModel::class.java]
         observeInput()
         addTextChangeListeners()
 

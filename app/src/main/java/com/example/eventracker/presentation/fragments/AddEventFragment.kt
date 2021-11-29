@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.eventracker.databinding.AddEventFragmentBinding
 import com.example.eventracker.presentation.viewmodels.AddEventFragmentViewModel
+import com.example.eventracker.presentation.viewmodels.ViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,7 +31,7 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addEventFragmentViewModel = ViewModelProvider(this)[AddEventFragmentViewModel::class.java]
+        addEventFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[AddEventFragmentViewModel::class.java]
 
         //TODO CHECK INPUT
         addEventFragmentBinding?.saveButton?.setOnClickListener {

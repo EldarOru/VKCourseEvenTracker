@@ -14,6 +14,7 @@ import com.example.eventracker.R
 import com.example.eventracker.databinding.MainEventFragmentBinding
 import com.example.eventracker.presentation.adapters.EventListAdapter
 import com.example.eventracker.presentation.viewmodels.MainFragmentViewModel
+import com.example.eventracker.presentation.viewmodels.ViewModelFactory
 
 class MainEventFragment: Fragment() {
     private lateinit var eventListAdapter: EventListAdapter
@@ -30,11 +31,10 @@ class MainEventFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainFragmentViewModel = ViewModelProvider(this)[MainFragmentViewModel::class.java]
-        //Toast.makeText(this.context, mainFragmentViewModel.getUserLiveData()?.value?.email.toString(), Toast.LENGTH_SHORT).show()
+        mainFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[MainFragmentViewModel::class.java]
         setRecyclerView()
 
-        mainFragmentViewModel.getUserLiveDatabase()?.observe(viewLifecycleOwner){
+        mainFragmentViewModel.getUserLiveDatabase().observe(viewLifecycleOwner){
             eventListAdapter.list = it.listOfEvents
         }
 

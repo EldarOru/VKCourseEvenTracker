@@ -10,13 +10,16 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RegistrationFragmentViewModel: ViewModel(){
+class RegistrationFragmentViewModel(
+    private val registrationUseCase: RegistrationUseCase,
+    private val getFirebaseInfoUseCase: GetFirebaseInfoUseCase,
+    private val getUserAccUseCase: GetUserAccUseCase): ViewModel(){
+
+    //TODO DELETE
     private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl()
-    private val registrationUserCase = RegistrationUseCase(generalRepositoryImpl)
-    private val getFirebaseInfoUseCase = GetFirebaseInfoUseCase(generalRepositoryImpl)
+
     private val firebaseInfoLiveData = getFirebaseInfoUseCase.getFirebaseInfo()
 
-    private val getUserAccUseCase = GetUserAccUseCase(generalRepositoryImpl)
     private var userLiveData: LiveData<FirebaseUser> = getUserAccUseCase.getUserAcc()
 
     var shouldCloseScreen: MutableLiveData<Unit>? = null
@@ -36,6 +39,7 @@ class RegistrationFragmentViewModel: ViewModel(){
     private val _errorRepeatPassword = MutableLiveData<Boolean>()
     val errorRepeatPassword: LiveData<Boolean>
         get() = _errorRepeatPassword
+
 //TODO что-то сделать с закрытием
     init {
         shouldCloseScreen = generalRepositoryImpl.getPop()
@@ -45,7 +49,7 @@ class RegistrationFragmentViewModel: ViewModel(){
         val validateData = validateInput(name, email, password, repeatPassword)
         if (validateData) {
             viewModelScope.launch(Dispatchers.Main) {
-                registrationUserCase.register(name, email, password)
+                registrationUseCase.register(name, email, password)
             }
         }
     }

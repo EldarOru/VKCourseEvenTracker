@@ -12,14 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class LoginFragmentViewModel: ViewModel(){
-    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl()
-    private val loginUseCase = LoginUseCase(generalRepositoryImpl)
+class LoginFragmentViewModel(
+    private val loginUseCase: LoginUseCase,
+    private val getUserAccUseCase: GetUserAccUseCase,
+    private val getFirebaseInfoUseCase: GetFirebaseInfoUseCase): ViewModel(){
 
-    private val getUserAccUseCase = GetUserAccUseCase(generalRepositoryImpl)
     private val userLiveData: LiveData<FirebaseUser> = getUserAccUseCase.getUserAcc()
 
-    private val getFirebaseInfoUseCase = GetFirebaseInfoUseCase(generalRepositoryImpl)
     private val firebaseInfoLiveData = getFirebaseInfoUseCase.getFirebaseInfo()
 
     private val _errorEmail = MutableLiveData<Boolean>()
