@@ -1,5 +1,6 @@
 package com.example.eventracker.presentation.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,9 +14,11 @@ import com.example.eventracker.R
 import com.example.eventracker.databinding.RegistrationFragmentBinding
 import com.example.eventracker.presentation.viewmodels.RegistrationFragmentViewModel
 import com.example.eventracker.presentation.viewmodels.ViewModelFactory
+import java.lang.RuntimeException
 
 class RegistrationFragment: Fragment() {
     private lateinit var registrationFragmentViewModel: RegistrationFragmentViewModel
+    private lateinit var onFragmentsInteractionsListener: OnFragmentsInteractionsListener
     private var registrationFragmentBinding: RegistrationFragmentBinding? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,18 +29,29 @@ class RegistrationFragment: Fragment() {
         return registrationFragmentBinding?.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentsInteractionsListener){
+            onFragmentsInteractionsListener = context
+        }else{
+            throw RuntimeException("Activity must implement OnFragmentsInteractionsListener")
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        registrationFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[RegistrationFragmentViewModel::class.java]
+        registrationFragmentViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory())[RegistrationFragmentViewModel::class.java]
         observeInput()
         addTextChangeListeners()
         
         registrationFragmentViewModel.shouldCloseScreen?.observe(viewLifecycleOwner){
-            activity?.supportFragmentManager?.popBackStack()
+            onFragmentsInteractionsListener.onPopBackStack()
         }
 
         registrationFragmentBinding?.backLoginActivity?.setOnClickListener {
-            activity?.supportFragmentManager?.popBackStack()
+            onFragmentsInteractionsListener.onPopBackStack()
         }
 
         registrationFragmentViewModel.getFirebaseInfoLiveData().observe(viewLifecycleOwner){

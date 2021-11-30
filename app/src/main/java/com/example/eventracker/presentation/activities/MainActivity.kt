@@ -2,11 +2,12 @@ package com.example.eventracker.presentation.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import com.example.eventracker.R
 import com.example.eventracker.databinding.ActivityMainBinding
-import com.example.eventracker.presentation.fragments.AppInfoFragment
-import com.example.eventracker.presentation.fragments.LoginFragment
+import com.example.eventracker.presentation.fragments.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
     var binding: ActivityMainBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +17,33 @@ class MainActivity : AppCompatActivity() {
             .replace(binding?.mainContainer!!.id, LoginFragment())
             .replace(binding?.bottomContainer!!.id, AppInfoFragment())
             .commit()
+    }
+
+    override fun onLoginSuccess(
+        mainEventFragment: MainEventFragment,
+        bottomNavigationFragment: BottomNavigationFragment
+    ) {
+        supportFragmentManager.beginTransaction()
+            .replace(binding?.mainContainer!!.id, mainEventFragment)
+            .replace(binding?.bottomContainer!!.id, bottomNavigationFragment)
+            .commit()
+    }
+
+    override fun onChangeFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(binding?.mainContainer!!.id, fragment)
+            .commit()
+    }
+
+    override fun onAddBackStack(name: String, fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(name)
+            .replace(R.id.main_container, fragment)
+            .commit()
+    }
+
+    override fun onPopBackStack() {
+        supportFragmentManager.popBackStack()
     }
 
     /*

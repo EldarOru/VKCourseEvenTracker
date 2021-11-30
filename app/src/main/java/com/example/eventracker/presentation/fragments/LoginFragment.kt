@@ -1,5 +1,6 @@
 package com.example.eventracker.presentation.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,10 +14,22 @@ import com.example.eventracker.R
 import com.example.eventracker.databinding.LoginFragmentBinding
 import com.example.eventracker.presentation.viewmodels.LoginFragmentViewModel
 import com.example.eventracker.presentation.viewmodels.ViewModelFactory
+import java.lang.RuntimeException
 
 class LoginFragment: Fragment() {
     private lateinit var loginFragmentViewModel: LoginFragmentViewModel
+    private lateinit var onFragmentsInteractionsListener: OnFragmentsInteractionsListener
     private var loginFragmentBinding: LoginFragmentBinding? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentsInteractionsListener){
+            onFragmentsInteractionsListener = context
+        }else{
+            throw RuntimeException("Activity must implement OnFragmentsInteractionsListener")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,14 +45,14 @@ class LoginFragment: Fragment() {
         observeInput()
         addTextChangeListeners()
 
-        //TODO изменить взаимодействие активити и фрагментов
         loginFragmentViewModel.getUserLiveData().observe(viewLifecycleOwner){
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.main_container, MainEventFragment())
-                ?.replace(R.id.bottom_container, BottomNavigationFragment())
-                ?.commit()
+            onFragmentsInteractionsListener.onLoginSuccess(
+                mainEventFragment = MainEventFragment(),
+                bottomNavigationFragment = BottomNavigationFragment()
+            )
         }
 
+        //TODO перенести тост в активити
         loginFragmentViewModel.getFirebaseInfoLiveData().observe(viewLifecycleOwner){
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         }
@@ -52,10 +65,7 @@ class LoginFragment: Fragment() {
         }
 
         loginFragmentBinding?.registrationButton?.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.addToBackStack("login")
-                ?.replace(R.id.main_container, RegistrationFragment())
-                ?.commit()
+            onFragmentsInteractionsListener.onAddBackStack("login", RegistrationFragment())
         }
     }
 

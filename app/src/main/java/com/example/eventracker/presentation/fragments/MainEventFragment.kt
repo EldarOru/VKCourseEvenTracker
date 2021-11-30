@@ -1,5 +1,6 @@
 package com.example.eventracker.presentation.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,23 @@ import com.example.eventracker.databinding.MainEventFragmentBinding
 import com.example.eventracker.presentation.adapters.EventListAdapter
 import com.example.eventracker.presentation.viewmodels.MainFragmentViewModel
 import com.example.eventracker.presentation.viewmodels.ViewModelFactory
+import java.lang.RuntimeException
 
 class MainEventFragment: Fragment() {
     private lateinit var eventListAdapter: EventListAdapter
-    private var mainEventFragmentBinding: MainEventFragmentBinding? = null
     private lateinit var mainFragmentViewModel: MainFragmentViewModel
+    private lateinit var onFragmentsInteractionsListener: OnFragmentsInteractionsListener
+    private var mainEventFragmentBinding: MainEventFragmentBinding? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentsInteractionsListener){
+            onFragmentsInteractionsListener = context
+        }else{
+            throw RuntimeException("Activity must implement OnFragmentsInteractionsListener")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,12 +52,10 @@ class MainEventFragment: Fragment() {
         }
 
         mainEventFragmentBinding?.buttonAddEvent?.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.addToBackStack(null)
-                ?.replace(R.id.main_container, AddEventFragment())
-                ?.commit()
+            onFragmentsInteractionsListener.onAddBackStack("addEvent", AddEventFragment())
         }
     }
+
     //TODO CHANGE
     override fun onDestroy() {
         super.onDestroy()
