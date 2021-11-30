@@ -19,6 +19,7 @@
     <string name="write_your_email">Write your email</string>
     <string name="error_email">Incorrect email</string>
     <string name="error_password">Incorrect password</string>
-    <string name="error_name">Incorrect password</string>
+    <string name="error_name">Incorrect name</string>
     <string name="error_repeat_password">Passwords do not match</string>
+    <string name="error_description">Incorrect description</string>
 </resources>

@@ -11,6 +11,7 @@ import com.example.eventracker.domain.models.User
 import com.example.eventracker.domain.usecases.DeleteEventUseCase
 import com.example.eventracker.domain.usecases.GetUserAccUseCase
 import com.example.eventracker.domain.usecases.GetUserDatabaseUseCase
+import com.example.eventracker.domain.usecases.LogOutUseCase
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,26 +19,16 @@ import kotlinx.coroutines.launch
 class MainFragmentViewModel(
     private val getUserDatabaseUseCase: GetUserDatabaseUseCase,
     private val deleteEventUseCase: DeleteEventUseCase,
-    private val getUserAccUseCase: GetUserAccUseCase):ViewModel() {
-    //TODO DELETE
-    private val generalRepositoryImpl: GeneralRepositoryImpl = GeneralRepositoryImpl()
+    private val getUserAccUseCase: GetUserAccUseCase,
+    private val logOutUseCase: LogOutUseCase):ViewModel() {
 
     private var userLiveDatabase: LiveData<User> = getUserDatabaseUseCase.getUser()
 
     private val userLiveData: LiveData<FirebaseUser> = getUserAccUseCase.getUserAcc()
 
-
-    //TODO CHANGE
     fun logOut(){
-        generalRepositoryImpl.logOut()
+        logOutUseCase.logOut()
     }
-
-    /*
-    fun getUserLiveData(): MutableLiveData<FirebaseUser>? {
-        return userLiveData
-    }
-
-     */
 
     fun getUserLiveDatabase(): LiveData<User>{
         return userLiveDatabase
@@ -48,4 +39,11 @@ class MainFragmentViewModel(
             deleteEventUseCase.deleteEvent(event)
         }
     }
+
+    /*
+    fun getUserLiveData(): MutableLiveData<FirebaseUser>? {
+        return userLiveData
+    }
+
+     */
 }

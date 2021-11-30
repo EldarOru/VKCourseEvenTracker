@@ -40,7 +40,7 @@ class RegistrationFragmentViewModel(
     val errorRepeatPassword: LiveData<Boolean>
         get() = _errorRepeatPassword
 
-//TODO что-то сделать с закрытием
+//TODO что-то сделать с закрытием, не работает
     init {
         shouldCloseScreen = generalRepositoryImpl.getPop()
     }
@@ -54,7 +54,7 @@ class RegistrationFragmentViewModel(
         }
     }
 
-    fun getUserLiveData(): LiveData<FirebaseUser>? {
+    fun getUserLiveData(): LiveData<FirebaseUser> {
         return userLiveData
     }
 

@@ -15,7 +15,7 @@ import com.google.firebase.database.*
 import kotlinx.coroutines.*
 
 class GeneralRepositoryImpl(): GeneralRepository {
-    //TODO GOD OBJECT, CHANGE ARCHITECTURE
+    //подключаем авторизацию и базу данных
     private var firebaseAuth: FirebaseAuth? = null
     private var database: DatabaseReference? = null
 
@@ -47,7 +47,7 @@ class GeneralRepositoryImpl(): GeneralRepository {
         if (firebaseAuth?.currentUser != null) {
             firebaseUserLiveData?.value = firebaseAuth?.currentUser
             loggedOutLiveData?.value = false
-            GlobalScope.launch {
+            GlobalScope.launch(Dispatchers.Main) {
                 getUserFromFirebase()
             }
         }
@@ -88,25 +88,14 @@ class GeneralRepositoryImpl(): GeneralRepository {
         )
     }
 
-    //TODO
-    fun checkName(name: String){
-        database?.child("users")?.orderByChild("names")?.equalTo(name)
-    }
-
-    fun getLoggedOutLiveData(): MutableLiveData<Boolean>? {
-        return loggedOutLiveData
-    }
-
-    fun logOut() {
-        firebaseAuth!!.signOut()
-        loggedOutLiveData!!.postValue(true)
-    }
-
     override suspend fun createEvent(event: Event): Unit = withContext(Dispatchers.IO){
         val key = database?.push()?.key.toString()
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.child("events")
             ?.child(key)
             ?.setValue(Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description))
+        GlobalScope.launch(Dispatchers.Main) {
+            firebaseInfoLiveData?.value = "Success"
+        }
     }
 
     override suspend fun getUserFromFirebase(): Unit = withContext(Dispatchers.IO){
@@ -130,7 +119,7 @@ class GeneralRepositoryImpl(): GeneralRepository {
                 userLiveDatabase?.value = user
             }
             override fun onCancelled(error: DatabaseError) {
-                //TODO
+                firebaseInfoLiveData?.value = "Login failure: ${error.message}}"
             }
         })
     }
@@ -138,6 +127,20 @@ class GeneralRepositoryImpl(): GeneralRepository {
     override suspend fun deleteEvent(event: Event): Unit = withContext(Dispatchers.IO){
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
             ?.child("events")?.child(event.key)?.removeValue()
+    }
+
+    //TODO
+    fun checkName(name: String){
+        database?.child("users")?.orderByChild("names")?.equalTo(name)
+    }
+
+    fun getLoggedOutLiveData(): MutableLiveData<Boolean>? {
+        return loggedOutLiveData
+    }
+
+    override fun logOut() {
+        firebaseAuth!!.signOut()
+        loggedOutLiveData!!.postValue(true)
     }
 
     override fun getUser(): LiveData<User>{

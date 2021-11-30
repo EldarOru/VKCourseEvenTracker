@@ -55,6 +55,9 @@ class RegistrationFragment: Fragment() {
     }
 
 
+
+
+
     private fun observeInput(){
         registrationFragmentViewModel.errorName.observe(viewLifecycleOwner) {
             val message = if (it) {

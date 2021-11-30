@@ -11,9 +11,11 @@ interface GeneralRepository {
 
     //TODO DELETE?
     suspend fun getUserFromFirebase()
+
     suspend fun createEvent(event: Event)
     suspend fun deleteEvent(event: Event)
 
+    fun logOut()
     fun getFirebaseUser(): LiveData<FirebaseUser>
     fun getUser(): LiveData<User>
     fun getFirebaseInfo(): LiveData<String>

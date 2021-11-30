@@ -1,6 +1,5 @@
 package com.example.eventracker.domain.models
 
-import com.example.eventracker.domain.models.User
 import kotlin.collections.ArrayList
 
 data class Event(

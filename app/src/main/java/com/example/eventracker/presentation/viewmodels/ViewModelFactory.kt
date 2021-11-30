@@ -39,6 +39,10 @@ class ViewModelFactory: ViewModelProvider.Factory{
         RegistrationUseCase(generalRepository = generalRepository)
     }
 
+    private val logOutUseCase by lazy {
+        LogOutUseCase(generalRepository = generalRepository)
+    }
+
 
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -50,13 +54,15 @@ class ViewModelFactory: ViewModelProvider.Factory{
         }
         if (modelClass.isAssignableFrom(AddEventFragmentViewModel::class.java)){
             return AddEventFragmentViewModel(
-                createEventUseCase = createEventUseCase) as T
+                createEventUseCase = createEventUseCase,
+                getFirebaseInfoUseCase = getFirebaseInfoUseCase) as T
         }
         if (modelClass.isAssignableFrom(MainFragmentViewModel::class.java)){
             return MainFragmentViewModel(
                 getUserDatabaseUseCase = getUserDatabaseUseCase,
                 deleteEventUseCase = deleteEventUseCase,
-                getUserAccUseCase = getUserAccUseCase) as T
+                getUserAccUseCase = getUserAccUseCase,
+                logOutUseCase = logOutUseCase) as T
         }
         if (modelClass.isAssignableFrom(RegistrationFragmentViewModel::class.java)){
             return RegistrationFragmentViewModel(
