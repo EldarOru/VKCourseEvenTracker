@@ -32,7 +32,7 @@ class ViewModelFactory: ViewModelProvider.Factory{
     }
 
     private val loginUseCase by lazy {
-        LoginUseCase(generalRepository = generalRepository)
+        LogInUseCase(generalRepository = generalRepository)
     }
 
     private val registrationUseCase by lazy {
@@ -43,12 +43,16 @@ class ViewModelFactory: ViewModelProvider.Factory{
         LogOutUseCase(generalRepository = generalRepository)
     }
 
+    private val getEventByKeyUseCase by lazy {
+        GetEventByKeyUseCase(generalRepository = generalRepository)
+    }
+
 
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginFragmentViewModel::class.java)){
             return LoginFragmentViewModel(
-                loginUseCase = loginUseCase,
+                logInUseCase = loginUseCase,
                 getUserAccUseCase = getUserAccUseCase,
                 getFirebaseInfoUseCase = getFirebaseInfoUseCase) as T
         }
@@ -69,6 +73,19 @@ class ViewModelFactory: ViewModelProvider.Factory{
                 registrationUseCase = registrationUseCase,
                 getFirebaseInfoUseCase = getFirebaseInfoUseCase,
                 getUserAccUseCase = getUserAccUseCase) as T
+        }
+        if (modelClass.isAssignableFrom(DetailedEventFragmentViewModel::class.java)){
+            return DetailedEventFragmentViewModel(
+                getUserDatabaseUseCase = getUserDatabaseUseCase,
+                getEventByKeyUseCase = getEventByKeyUseCase) as T
+        }
+        if (modelClass.isAssignableFrom(InvitationFragmentViewModel::class.java)) {
+            return InvitationFragmentViewModel(
+                getUserDatabaseUseCase = getUserDatabaseUseCase,
+                deleteEventUseCase = deleteEventUseCase,
+                getUserAccUseCase = getUserAccUseCase,
+                logOutUseCase = logOutUseCase
+            ) as T
         }
         throw IllegalAccessException("ViewModel class is not found")
     }

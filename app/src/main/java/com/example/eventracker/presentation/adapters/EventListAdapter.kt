@@ -8,6 +8,8 @@ import com.example.eventracker.domain.models.Event
 
 class EventListAdapter: RecyclerView.Adapter<EventListAdapter.EventItemViewHolder>() {
 
+    var onShopItemClickListener: ((Event) -> Unit)? = null
+
     //TODO CHANGE UPDATE
     var list = listOf<Event>()
     set(value) {
@@ -25,6 +27,9 @@ class EventListAdapter: RecyclerView.Adapter<EventListAdapter.EventItemViewHolde
         holder.eventBinding.eventNameEt.text = event.name
         holder.eventBinding.eventDateEt.text = event.date
         holder.eventBinding.eventDescriptionEt.text = event.description
+        holder.eventBinding.root.setOnClickListener {
+            onShopItemClickListener?.invoke(event)
+        }
     }
 
     override fun getItemCount(): Int {

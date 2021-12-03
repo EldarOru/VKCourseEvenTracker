@@ -1,19 +1,17 @@
 package com.example.eventracker.presentation.viewmodels
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 
-import com.example.eventracker.data.GeneralRepositoryImpl
 import com.example.eventracker.domain.usecases.GetFirebaseInfoUseCase
 import com.example.eventracker.domain.usecases.GetUserAccUseCase
-import com.example.eventracker.domain.usecases.LoginUseCase
+import com.example.eventracker.domain.usecases.LogInUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class LoginFragmentViewModel(
-    private val loginUseCase: LoginUseCase,
+    private val logInUseCase: LogInUseCase,
     private val getUserAccUseCase: GetUserAccUseCase,
     private val getFirebaseInfoUseCase: GetFirebaseInfoUseCase): ViewModel(){
 
@@ -35,7 +33,7 @@ class LoginFragmentViewModel(
         val validateData = validateInput(email, password)
         if (validateData) {
             viewModelScope.launch(Dispatchers.Main) {
-                loginUseCase.login(email, password)
+                logInUseCase.login(email, password)
             }
         }
     }

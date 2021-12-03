@@ -34,8 +34,7 @@ class BottomNavigationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //TODO всё сделать
-        /*
+
         bottomNavigationFragmentBinding?.bottomNavigation?.setOnItemSelectedListener {
             when (it.itemId){
                 R.id.one -> {onFragmentsInteractionsListener.onChangeFragment(MainEventFragment())
@@ -47,6 +46,6 @@ class BottomNavigationFragment: Fragment() {
             }
         }
 
-         */
+
     }
 }

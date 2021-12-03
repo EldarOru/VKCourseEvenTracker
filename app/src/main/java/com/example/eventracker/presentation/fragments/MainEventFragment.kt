@@ -46,6 +46,7 @@ class MainEventFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[MainFragmentViewModel::class.java]
         setRecyclerView()
+        setupClickListener()
 
         mainFragmentViewModel.getUserLiveDatabase().observe(viewLifecycleOwner){
             eventListAdapter.list = it.listOfEvents
@@ -59,7 +60,15 @@ class MainEventFragment: Fragment() {
     //TODO CHANGE
     override fun onDestroy() {
         super.onDestroy()
-        mainFragmentViewModel.logOut()
+        //mainFragmentViewModel.logOut()
+    }
+
+    private fun setupClickListener() {
+        eventListAdapter.onShopItemClickListener = {
+            onFragmentsInteractionsListener.onAddBackStack(
+                "event",
+                DetailedEventFragment.newInstanceDetailedEventFragment(it.key))
+        }
     }
 
     private fun setRecyclerView(){
@@ -82,10 +91,7 @@ class MainEventFragment: Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = eventListAdapter.list[viewHolder.adapterPosition]
-                Toast.makeText(context, item.toString(), Toast.LENGTH_LONG).show()
-
                 mainFragmentViewModel.deleteEvent(item)
-                Toast.makeText(context, mainFragmentViewModel.getUserLiveDatabase()?.value.toString(), Toast.LENGTH_LONG).show()
             }
         }
         val itemTouchHelper = ItemTouchHelper(myCallBack)

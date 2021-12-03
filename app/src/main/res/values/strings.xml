@@ -22,4 +22,6 @@
     <string name="error_name">Incorrect name</string>
     <string name="error_repeat_password">Passwords do not match</string>
     <string name="error_description">Incorrect description</string>
+    <string name="accept_invite">Accept invite</string>
+    <string name="deny_invite">Deny invite</string>
 </resources>

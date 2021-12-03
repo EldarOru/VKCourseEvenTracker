@@ -1,7 +1,6 @@
 package com.example.eventracker.data
 
-import android.app.Application
-import android.widget.Toast
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseAuth
 
@@ -34,6 +33,8 @@ class GeneralRepositoryImpl(): GeneralRepository {
     //нужно ли делать popback
     private var shouldPopBackStack: MutableLiveData<Unit>? = null
 
+    private var idListOne = arrayListOf<String>()
+    private var user = User()
     init {
         shouldPopBackStack = MutableLiveData()
         firebaseAuth = FirebaseAuth.getInstance()
@@ -47,9 +48,10 @@ class GeneralRepositoryImpl(): GeneralRepository {
         if (firebaseAuth?.currentUser != null) {
             firebaseUserLiveData?.value = firebaseAuth?.currentUser
             loggedOutLiveData?.value = false
-            GlobalScope.launch(Dispatchers.Main) {
-                getUserFromFirebase()
-            }
+            getUserFromFirebase()
+            getAllUsersID()
+
+
         }
     }
 
@@ -58,18 +60,22 @@ class GeneralRepositoryImpl(): GeneralRepository {
     }
 
     override suspend fun login(email: String, password: String): Unit = withContext(Dispatchers.IO){
-        firebaseAuth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener {
-            if (it.isSuccessful) {
-                firebaseUserLiveData?.value = firebaseAuth?.currentUser
-                firebaseInfoLiveData?.value = "Success"
-            }
-            else{
-                firebaseInfoLiveData?.value = "Login failure: ${it.exception?.localizedMessage}"
+        Log.d("Kek", "${Thread.currentThread().name}")
+        val job = async {
+            firebaseAuth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.d("Kek", "${Thread.currentThread().name}")
+                    firebaseUserLiveData?.value = firebaseAuth?.currentUser
+                    firebaseInfoLiveData?.value = "Success"
+                } else {
+                    firebaseInfoLiveData?.value = "Login failure: ${it.exception?.localizedMessage}"
                 }
             }
         }
+        job.await()
+        }
 
-    override suspend fun register(name: String, email: String, password: String){
+    override suspend fun register(name: String, email: String, password: String): Unit = withContext(Dispatchers.IO){
         firebaseAuth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener {
                 if (it.isSuccessful){
                     addToDatabase(name, email)
@@ -84,22 +90,24 @@ class GeneralRepositoryImpl(): GeneralRepository {
 
     private fun addToDatabase(name: String, email: String){
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.setValue(
-            User(name, email)
+            User(login = name, email = email, userID = firebaseAuth?.currentUser!!.uid)
         )
     }
 
     override suspend fun createEvent(event: Event): Unit = withContext(Dispatchers.IO){
+        Log.d("CREATE", userLiveDatabase?.value.toString())
         val key = database?.push()?.key.toString()
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.child("events")
             ?.child(key)
             ?.setValue(Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description))
+        sendInvites(key, Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description))
         GlobalScope.launch(Dispatchers.Main) {
             firebaseInfoLiveData?.value = "Success"
         }
     }
 
-    override suspend fun getUserFromFirebase(): Unit = withContext(Dispatchers.IO){
-        var user: User
+    //грязно...
+    override fun getUserFromFirebase() {
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
             ?.addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -113,13 +121,25 @@ class GeneralRepositoryImpl(): GeneralRepository {
                     key = snapshotOne.child("key").value.toString())
                     )
                 }
+                val arrayInvites = arrayListOf<Event>()
+                for (snapshotOne in snapshot.child("invitations").children){
+                    arrayInvites.add(
+                        Event(creator = snapshotOne.child("creator").value.toString(),
+                            name = snapshotOne.child("name").value.toString(),
+                            description = snapshotOne.child("description").value.toString(),
+                            date = snapshotOne.child("date").value.toString(),
+                            key = snapshotOne.child("key").value.toString())
+                    )
+                }
                 user = User(login = snapshot.child("login").value.toString(),
                 email = snapshot.child("email").value.toString(),
-                listOfEvents = arrayEvent)
-                userLiveDatabase?.value = user
+                listOfEvents = arrayEvent,
+                listOfInvitations = arrayInvites)
+                updateUser()
+
             }
             override fun onCancelled(error: DatabaseError) {
-                firebaseInfoLiveData?.value = "Login failure: ${error.message}}"
+                firebaseInfoLiveData?.value = "${error.message}}"
             }
         })
     }
@@ -129,9 +149,44 @@ class GeneralRepositoryImpl(): GeneralRepository {
             ?.child("events")?.child(event.key)?.removeValue()
     }
 
+    //TODO сделать что-то с безопасностью...
+    fun getAllUsersID(){
+        Log.d("WORKS", "YES")
+        val idList = arrayListOf<String>()
+        database?.addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (snapshotOne in snapshot.child("users").children){
+                    if (snapshotOne.key.toString() != firebaseAuth?.currentUser!!.uid)
+                    idList.add(snapshotOne.key.toString())
+                    Log.d("CHECKONE", idList.toString())
+                }
+                idListOne = idList
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //Log.d("USERID", error.message)
+            }
+        })
+    }
+
+    //TODO сделать теги
+    fun sendInvites(key: String, event: Event){
+        Log.d("CHECKONE", idListOne.toString())
+        for (i in idListOne){
+            database?.child("users")?.child(i)?.child("invitations")
+                ?.child(key)
+                ?.setValue(event)
+        }
+    }
+
     //TODO
+    /*
     fun checkName(name: String){
         database?.child("users")?.orderByChild("names")?.equalTo(name)
+    }
+     */
+    fun updateUser(){
+        userLiveDatabase?.value = user
     }
 
     fun getLoggedOutLiveData(): MutableLiveData<Boolean>? {
@@ -153,5 +208,11 @@ class GeneralRepositoryImpl(): GeneralRepository {
 
     override fun getFirebaseInfo(): LiveData<String> {
         return firebaseInfoLiveData!!
+    }
+
+    override fun getEventByKey(key: String): Event {
+        return user.listOfEvents.find {
+            it.key == key
+        } ?: throw Exception("Element with key $key is not existed")
     }
 }

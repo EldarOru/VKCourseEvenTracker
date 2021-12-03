@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.eventracker.R
+import com.example.eventracker.data.GeneralRepositoryImpl
 import com.example.eventracker.databinding.ActivityMainBinding
 import com.example.eventracker.presentation.fragments.*
 
 class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
     var binding: ActivityMainBinding? = null
+    val generalRepositoryImpl = GeneralRepositoryImpl()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -30,12 +32,14 @@ class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
     }
 
     override fun onChangeFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(binding?.mainContainer!!.id, fragment)
             .commit()
     }
 
     override fun onAddBackStack(name: String, fragment: Fragment) {
+        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .addToBackStack(name)
             .replace(R.id.main_container, fragment)
@@ -44,6 +48,11 @@ class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
 
     override fun onPopBackStack() {
         supportFragmentManager.popBackStack()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        generalRepositoryImpl.logOut()
     }
 
     /*
