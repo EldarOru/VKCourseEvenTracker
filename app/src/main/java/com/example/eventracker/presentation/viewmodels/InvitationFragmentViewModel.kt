@@ -18,7 +18,7 @@ class InvitationFragmentViewModel(private val getUserDatabaseUseCase: GetUserDat
                                   private val deleteEventUseCase: DeleteEventUseCase,
                                   private val getUserAccUseCase: GetUserAccUseCase,
                                   private val logOutUseCase: LogOutUseCase
-): ViewModel() {
+                                  ): ViewModel() {
 
     private var userLiveDatabase: LiveData<User> = getUserDatabaseUseCase.getUser()
 

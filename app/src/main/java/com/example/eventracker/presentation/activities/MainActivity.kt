@@ -9,7 +9,9 @@ import com.example.eventracker.databinding.ActivityMainBinding
 import com.example.eventracker.presentation.fragments.*
 
 class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
-    var binding: ActivityMainBinding? = null
+    private var binding: ActivityMainBinding? = null
+
+    //TODO исправить
     val generalRepositoryImpl = GeneralRepositoryImpl()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,6 @@ class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
     }
 
     override fun onChangeFragment(fragment: Fragment) {
-        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(binding?.mainContainer!!.id, fragment)
             .commit()
