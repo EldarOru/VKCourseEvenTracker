@@ -28,11 +28,11 @@ class InvitationListAdapter: RecyclerView.Adapter<InvitationListAdapter.EventInv
         holder.eventInviteBinding.eventInviteNameEt.text = event.name
         holder.eventInviteBinding.eventInviteDateEt.text = event.date
         holder.eventInviteBinding.eventInviteDescriptionEt.text = event.description
-        /*
+
         holder.eventInviteBinding.root.setOnClickListener {
             onShopItemClickListener?.invoke(event)
         }
-         */
+
     }
 
     override fun getItemCount(): Int {

@@ -25,6 +25,7 @@ class AddEventFragmentViewModel(
     val errorDescription: LiveData<Boolean>
         get() = _errorDescription
 
+    /*
     fun createNewEvent(eventName: String, eventDescription: String, date: String) {
         val validateData = validateInput(eventName, eventDescription)
         if (validateData) {
@@ -39,8 +40,9 @@ class AddEventFragmentViewModel(
             }
         }
     }
+     */
 
-    private fun validateInput(name: String, description: String): Boolean {
+    fun validateInput(name: String, description: String): Boolean {
         var flag = true
         if (name.isBlank()) {
             _errorName.value = true

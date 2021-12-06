@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
     }
 
     override fun onAddBackStack(name: String, fragment: Fragment) {
-        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .addToBackStack(name)
             .replace(R.id.main_container, fragment)
@@ -48,7 +47,9 @@ class MainActivity : AppCompatActivity(), OnFragmentsInteractionsListener {
     }
 
     override fun onPopBackStack() {
-        supportFragmentManager.popBackStack()
+        for(i in 0..supportFragmentManager.backStackEntryCount) {
+            supportFragmentManager.popBackStack()
+        }
     }
 
     override fun onDestroy() {

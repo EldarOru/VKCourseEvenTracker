@@ -24,4 +24,6 @@
     <string name="error_description">Incorrect description</string>
     <string name="accept_invite">Accept invite</string>
     <string name="deny_invite">Deny invite</string>
+    <string name="create">Create</string>
+    <string name="next">Next</string>
 </resources>

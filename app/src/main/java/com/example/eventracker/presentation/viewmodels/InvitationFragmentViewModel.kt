@@ -5,20 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eventracker.domain.models.Event
 import com.example.eventracker.domain.models.User
-import com.example.eventracker.domain.usecases.DeleteEventUseCase
-import com.example.eventracker.domain.usecases.GetUserAccUseCase
-import com.example.eventracker.domain.usecases.GetUserDatabaseUseCase
-import com.example.eventracker.domain.usecases.LogOutUseCase
+import com.example.eventracker.domain.usecases.*
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 //TODO всё изменить
 class InvitationFragmentViewModel(private val getUserDatabaseUseCase: GetUserDatabaseUseCase,
-                                  private val deleteEventUseCase: DeleteEventUseCase,
                                   private val getUserAccUseCase: GetUserAccUseCase,
-                                  private val logOutUseCase: LogOutUseCase
-                                  ): ViewModel() {
+                                  private val logOutUseCase: LogOutUseCase,
+                                  private val deleteInviteUseCase: DeleteInviteUseCase,
+                                  private val addInviteToEventsUseCase: AddInviteToEventsUseCase): ViewModel() {
 
     private var userLiveDatabase: LiveData<User> = getUserDatabaseUseCase.getUser()
 
@@ -36,9 +33,15 @@ class InvitationFragmentViewModel(private val getUserDatabaseUseCase: GetUserDat
         return userLiveData
     }
 
-    fun deleteEvent(event: Event){
+    fun deleteInvite(event: Event){
         viewModelScope.launch(Dispatchers.Main) {
-            deleteEventUseCase.deleteEvent(event)
+            deleteInviteUseCase.deleteInvite(event)
+        }
+    }
+
+    fun addInviteToEventsUseCase(event: Event){
+        viewModelScope.launch(Dispatchers.Main) {
+            addInviteToEventsUseCase.addInviteToEvents(event)
         }
     }
 }

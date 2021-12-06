@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eventracker.R
+import com.example.eventracker.data.GeneralRepositoryImpl
 import com.example.eventracker.databinding.MainEventFragmentBinding
 import com.example.eventracker.presentation.adapters.EventListAdapter
 import com.example.eventracker.presentation.viewmodels.MainFragmentViewModel
@@ -57,17 +58,11 @@ class MainEventFragment: Fragment() {
         }
     }
 
-    //TODO CHANGE
-    override fun onDestroy() {
-        super.onDestroy()
-        //mainFragmentViewModel.logOut()
-    }
-
     private fun setupClickListener() {
         eventListAdapter.onShopItemClickListener = {
             onFragmentsInteractionsListener.onAddBackStack(
                 "event",
-                DetailedEventFragment.newInstanceDetailedEventFragment(it.key))
+                DetailedEventFragment.newInstanceDetailedEventFragment(GeneralRepositoryImpl.GET_FROM_EVENT_LIST, it.key))
         }
     }
 

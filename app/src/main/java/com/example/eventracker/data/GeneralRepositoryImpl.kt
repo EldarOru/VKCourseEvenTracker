@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.eventracker.domain.models.Event
 import com.example.eventracker.domain.GeneralRepository
 import com.example.eventracker.domain.models.User
+import com.google.android.gms.maps.model.LatLng
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -50,8 +51,6 @@ class GeneralRepositoryImpl(): GeneralRepository {
             loggedOutLiveData?.value = false
             getUserFromFirebase()
             getAllUsersID()
-
-
         }
     }
 
@@ -99,8 +98,8 @@ class GeneralRepositoryImpl(): GeneralRepository {
         val key = database?.push()?.key.toString()
         database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)?.child("events")
             ?.child(key)
-            ?.setValue(Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description))
-        sendInvites(key, Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description))
+            ?.setValue(Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description, eventPosition = event.eventPosition))
+        sendInvites(key, Event(key,userLiveDatabase?.value!!.login, event.date, event.name, event.description,eventPosition = event.eventPosition))
         GlobalScope.launch(Dispatchers.Main) {
             firebaseInfoLiveData?.value = "Success"
         }
@@ -118,7 +117,10 @@ class GeneralRepositoryImpl(): GeneralRepository {
                     name = snapshotOne.child("name").value.toString(),
                     description = snapshotOne.child("description").value.toString(),
                     date = snapshotOne.child("date").value.toString(),
-                    key = snapshotOne.child("key").value.toString())
+                    key = snapshotOne.child("key").value.toString(),
+                        eventPosition = LatLng(snapshotOne.child("eventPosition").child("latitude").value.toString().toDouble(),
+                            snapshotOne.child("eventPosition").child("longitude").value.toString().toDouble())
+                        )
                     )
                 }
                 val arrayInvites = arrayListOf<Event>()
@@ -128,7 +130,9 @@ class GeneralRepositoryImpl(): GeneralRepository {
                             name = snapshotOne.child("name").value.toString(),
                             description = snapshotOne.child("description").value.toString(),
                             date = snapshotOne.child("date").value.toString(),
-                            key = snapshotOne.child("key").value.toString())
+                            key = snapshotOne.child("key").value.toString(),
+                            eventPosition = LatLng(snapshotOne.child("eventPosition").child("latitude").value.toString().toDouble(),
+                                snapshotOne.child("eventPosition").child("longitude").value.toString().toDouble()))
                     )
                 }
                 user = User(login = snapshot.child("login").value.toString(),
@@ -149,8 +153,19 @@ class GeneralRepositoryImpl(): GeneralRepository {
             ?.child("events")?.child(event.key)?.removeValue()
     }
 
+    override suspend fun deleteInvite(event: Event): Unit = withContext(Dispatchers.IO) {
+        database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
+            ?.child("invitations")?.child(event.key)?.removeValue()
+    }
+
+    override suspend fun addInviteToEvents(event: Event): Unit = withContext(Dispatchers.IO) {
+        database?.child("users")?.child(firebaseAuth?.currentUser!!.uid)
+            ?.child("events")?.child(event.key)?.setValue(event)
+    }
+
     //TODO сделать что-то с безопасностью...
-    fun getAllUsersID(){
+    //TODO вообще это на бэкенде делать надо, но ладно...
+    private fun getAllUsersID(){
         Log.d("WORKS", "YES")
         val idList = arrayListOf<String>()
         database?.addValueEventListener(object :ValueEventListener{
@@ -162,7 +177,6 @@ class GeneralRepositoryImpl(): GeneralRepository {
                 }
                 idListOne = idList
             }
-
             override fun onCancelled(error: DatabaseError) {
                 //Log.d("USERID", error.message)
             }
@@ -170,7 +184,7 @@ class GeneralRepositoryImpl(): GeneralRepository {
     }
 
     //TODO сделать теги
-    fun sendInvites(key: String, event: Event){
+    private fun sendInvites(key: String, event: Event){
         Log.d("CHECKONE", idListOne.toString())
         for (i in idListOne){
             database?.child("users")?.child(i)?.child("invitations")
@@ -179,12 +193,6 @@ class GeneralRepositoryImpl(): GeneralRepository {
         }
     }
 
-    //TODO
-    /*
-    fun checkName(name: String){
-        database?.child("users")?.orderByChild("names")?.equalTo(name)
-    }
-     */
     fun updateUser(){
         userLiveDatabase?.value = user
     }
@@ -210,9 +218,24 @@ class GeneralRepositoryImpl(): GeneralRepository {
         return firebaseInfoLiveData!!
     }
 
-    override fun getEventByKey(key: String): Event {
-        return user.listOfEvents.find {
-            it.key == key
-        } ?: throw Exception("Element with key $key is not existed")
+    override fun getEventByKey(mode: String, key: String): Event {
+        return when (mode) {
+            GET_FROM_EVENT_LIST -> {
+                user.listOfEvents.find {
+                    it.key == key
+                } ?: throw Exception("Element with key $key is not existed")
+            }
+            GET_FROM_INVITE_LIST -> {
+                user.listOfInvitations.find {
+                    it.key == key
+                } ?: throw Exception("Element with key $key is not existed")
+            }
+            else -> throw Exception("Unknown mode $mode")
+        }
+    }
+
+    companion object{
+        const val GET_FROM_EVENT_LIST = "getFromEventList"
+        const val GET_FROM_INVITE_LIST = "getFromInviteList"
     }
 }

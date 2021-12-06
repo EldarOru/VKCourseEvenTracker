@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.eventracker.data.GeneralRepositoryImpl
 import com.example.eventracker.databinding.InvitationFragmentBinding
 import com.example.eventracker.databinding.MainEventFragmentBinding
 import com.example.eventracker.presentation.adapters.EventListAdapter
@@ -47,9 +49,17 @@ class InvitationFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         invitationFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[InvitationFragmentViewModel::class.java]
         setRecyclerView()
-        Toast.makeText(activity, invitationFragmentViewModel.getUserLiveData().value.toString(), Toast.LENGTH_LONG).show()
+        setupClickListener()
         invitationFragmentViewModel.getUserLiveDatabase().observe(viewLifecycleOwner){
             invitationListAdapter.list = it.listOfInvitations
+        }
+    }
+
+    private fun setupClickListener() {
+        invitationListAdapter.onShopItemClickListener = {
+            onFragmentsInteractionsListener.onAddBackStack(
+                "invite",
+                DetailedEventFragment.newInstanceDetailedEventFragment(GeneralRepositoryImpl.GET_FROM_INVITE_LIST, it.key))
         }
     }
 
@@ -58,7 +68,36 @@ class InvitationFragment: Fragment() {
         recyclerView?.layoutManager = LinearLayoutManager(context)
         invitationListAdapter = InvitationListAdapter()
         recyclerView?.adapter = invitationListAdapter
-        //setupSwipeListener(recyclerView as RecyclerView)
+        setupSwipeListener(recyclerView as RecyclerView)
 
+    }
+
+    private fun setupSwipeListener(recyclerView: RecyclerView) {
+        val myCallBack = object : ItemTouchHelper.SimpleCallback(0,
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
+            override fun onMove(recyclerView: RecyclerView,
+                                viewHolder: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when (direction){
+                    ItemTouchHelper.LEFT -> {
+                        val item = invitationListAdapter.list[viewHolder.adapterPosition]
+                        invitationFragmentViewModel.addInviteToEventsUseCase(item)
+                        invitationFragmentViewModel.deleteInvite(item)
+                    }
+
+                    ItemTouchHelper.RIGHT -> {
+                        val item = invitationListAdapter.list[viewHolder.adapterPosition]
+                        invitationFragmentViewModel.deleteInvite(item)
+
+                    }
+                }
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(myCallBack)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 }

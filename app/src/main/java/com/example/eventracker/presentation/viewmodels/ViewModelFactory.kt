@@ -47,6 +47,14 @@ class ViewModelFactory: ViewModelProvider.Factory{
         GetEventByKeyUseCase(generalRepository = generalRepository)
     }
 
+    private val deleteInviteUseCase by lazy {
+        DeleteInviteUseCase(generalRepository = generalRepository)
+    }
+
+    private val addInviteToEventsUseCase by lazy {
+        AddInviteToEventsUseCase(generalRepository = generalRepository)
+    }
+
 
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -82,10 +90,16 @@ class ViewModelFactory: ViewModelProvider.Factory{
         if (modelClass.isAssignableFrom(InvitationFragmentViewModel::class.java)) {
             return InvitationFragmentViewModel(
                 getUserDatabaseUseCase = getUserDatabaseUseCase,
-                deleteEventUseCase = deleteEventUseCase,
                 getUserAccUseCase = getUserAccUseCase,
-                logOutUseCase = logOutUseCase
+                logOutUseCase = logOutUseCase,
+                deleteInviteUseCase = deleteInviteUseCase,
+                addInviteToEventsUseCase = addInviteToEventsUseCase
             ) as T
+        }
+        if (modelClass.isAssignableFrom(MapFragmentViewModel::class.java)){
+            return MapFragmentViewModel(
+                createEventUseCase = createEventUseCase,
+                getFirebaseInfoUseCase = getFirebaseInfoUseCase) as T
         }
         throw IllegalAccessException("ViewModel class is not found")
     }

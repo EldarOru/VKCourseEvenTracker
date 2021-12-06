@@ -18,9 +18,9 @@ class DetailedEventFragmentViewModel(
 
     var event = MutableLiveData<Event>()
 
-    fun getEventByKey(key: String){
+    fun getEventByKey(mode: String, key: String){
         Log.d("ZAEBAL", userLiveDatabase.value.toString())
-        event.value = getEventByKeyUseCase.getEventByKey(key)
+        event.value = getEventByKeyUseCase.getEventByKey(mode,key)
     }
 
     fun getUserLiveDatabase(): LiveData<User>{

@@ -32,22 +32,24 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import java.lang.RuntimeException
 
 
-class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener, OnMapReadyCallback {
+class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
 
-    private val TAG = "MapActivity"
-
-    private val FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
-    private val COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1234
-
-    private var mLocationPermissionsGranted = false
-    private lateinit var mMap: GoogleMap
     private var addEventFragmentBinding: AddEventFragmentBinding? = null
     private lateinit var addEventFragmentViewModel: AddEventFragmentViewModel
 
-    private lateinit var mLocationClient: FusedLocationProviderClient
+    private lateinit var onFragmentsInteractionsListener: OnFragmentsInteractionsListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentsInteractionsListener){
+            onFragmentsInteractionsListener = context
+        }else{
+            throw RuntimeException("Activity must implement OnFragmentsInteractionsListener")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,8 +63,6 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener, OnMapRea
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addEventFragmentViewModel = ViewModelProvider(this, ViewModelFactory())[AddEventFragmentViewModel::class.java]
-        getLocationPermission()
-        initMap()
         observeInput()
         addTextChangeListeners()
 
@@ -70,8 +70,15 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener, OnMapRea
             val eventName: String = addEventFragmentBinding?.eventNameEt?.text.toString()
             val eventDescription: String = addEventFragmentBinding?.eventDescriptionEt?.text.toString()
             val date: String = addEventFragmentViewModel.checkDate(addEventFragmentBinding?.eventDateEt?.text.toString())
-                addEventFragmentViewModel.createNewEvent(
-                    eventName, eventDescription, date)
+            if (addEventFragmentViewModel.validateInput(eventName, eventDescription)) {
+                onFragmentsInteractionsListener.onAddBackStack("mapFragment",
+                    MapFragment.newInstanceMapFragment(
+                        date = date,
+                        name = eventName,
+                        description = eventDescription
+                    )
+                )
+            }
         }
 
         addEventFragmentBinding?.eventDateEt?.setOnClickListener {
@@ -83,118 +90,12 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener, OnMapRea
         }
     }
 
-    //TODO DO NORMAL DATE, NOT STRING
+    //TODO NORMAL DATE, NOT STRING
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val dateFormat = SimpleDateFormat("dd MMM yyyy")
         val gregorianCalendar = GregorianCalendar(year, month, dayOfMonth)
         addEventFragmentBinding?.eventDateEt?.text = dateFormat.format(gregorianCalendar.time)
     }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        getLocation()
-
-        mMap.setOnMapClickListener {
-            mMap.clear()
-            mMap.addMarker(MarkerOptions().position(it).title("Location"))
-        }
-    }
-
-    //почитать как работает
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        Log.d(TAG, "onRequestPermissionsResult: called.")
-        mLocationPermissionsGranted = false
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.size > 0) {
-                    var i = 0
-                    while (i < grantResults.size) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            mLocationPermissionsGranted = false
-                            Log.d(TAG, "onRequestPermissionsResult: permission failed")
-                            return
-                        }
-                        i++
-                    }
-                    Log.d(TAG, "onRequestPermissionsResult: permission granted")
-                    mLocationPermissionsGranted = true
-                }
-            }
-        }
-    }
-
-    private fun getLocation() {
-        mLocationClient = FusedLocationProviderClient(activity)
-
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                requireContext(),
-                COURSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            mLocationClient.lastLocation.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val location: Location = it.result
-                    setStartLocation(location.latitude, location.longitude)
-                }
-            }
-        }
-    }
-
-    private fun setStartLocation(latitude: Double, longitude: Double){
-        val currentPosition = LatLng(latitude, longitude)
-        mMap.addMarker(MarkerOptions().position(currentPosition).title("You are here"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition))
-
-    }
-
-    private fun initMap(){
-        if (mLocationPermissionsGranted) {
-            val mapFragment = childFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
-            mapFragment.getMapAsync(this)
-        }
-    }
-
-    private fun getLocationPermission() {
-        Log.d(TAG, "getLocationPermission: getting location permissions")
-        val permissions = arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    COURSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                mLocationPermissionsGranted = true
-            } else {
-                ActivityCompat.requestPermissions(
-                    activity as Activity,
-                    permissions,
-                    LOCATION_PERMISSION_REQUEST_CODE
-                )
-            }
-        } else {
-            ActivityCompat.requestPermissions(
-                activity as Activity,
-                permissions,
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        }
-    }
-
 
 
 
