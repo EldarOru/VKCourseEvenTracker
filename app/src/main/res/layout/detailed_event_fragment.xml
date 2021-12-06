@@ -6,35 +6,38 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:hint="@string/app_name"
         android:id="@+id/detailed_name_eventTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </TextView>
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"/>
 
     <TextView
+        android:background="@color/design_default_color_secondary"
+        android:textSize="20sp"
         android:id="@+id/detailed_date_eventTV"
         android:layout_margin="10dp"
-        android:hint="@string/app_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detailed_name_eventTV"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintVertical_chainStyle="spread">
 
     </TextView>
 
     <ScrollView
+        android:layout_margin="10dp"
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/detailed_map"
+        app:layout_constraintBottom_toTopOf="@id/location_address"
         app:layout_constraintTop_toBottomOf="@id/detailed_date_eventTV">
         <TextView
+            android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/detailed_description_eventTV">
@@ -42,14 +45,28 @@
         </TextView>
     </ScrollView>
 
+    <TextView
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:id="@+id/location_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/detailed_map"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_view"
+        />
+
     <fragment
+        android:layout_margin="10dp"
         android:id="@+id/detailed_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll_view"
+        app:layout_constraintTop_toBottomOf="@id/location_address"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

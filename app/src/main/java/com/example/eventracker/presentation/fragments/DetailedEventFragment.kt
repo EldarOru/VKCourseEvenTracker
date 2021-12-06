@@ -1,5 +1,7 @@
 package com.example.eventracker.presentation.fragments
 
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.util.*
 
 class DetailedEventFragment: Fragment(), OnMapReadyCallback {
 
@@ -59,6 +62,7 @@ class DetailedEventFragment: Fragment(), OnMapReadyCallback {
         eL.observe(viewLifecycleOwner) {
             mMap.addMarker(MarkerOptions().position(it).title("Location"))
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17f))
+            getPositionAddress(it)
         }
     }
 
@@ -67,7 +71,7 @@ class DetailedEventFragment: Fragment(), OnMapReadyCallback {
         val event = detailedEventFragmentViewModel.event.value
             detailedEventFragmentBinding?.apply {
             detailedNameEventTV.text = event?.name
-            detailedDateEventTV.text = event?.date
+            detailedDateEventTV.text = "This event will happen on " + event?.date
             detailedDescriptionEventTV.text = event?.description
                 eL.value = event!!.eventPosition
         }
@@ -83,6 +87,16 @@ class DetailedEventFragment: Fragment(), OnMapReadyCallback {
     private fun getArgs(){
         eventKey = requireArguments().getString(EVENT_KEY) as String
         mode = requireArguments().getString(MODE_KEY) as String
+    }
+
+    //TODO сделать асинхронным?
+    private fun getPositionAddress(latLng: LatLng){
+        val addresses: MutableList<Address>
+        val geocoder = Geocoder(context, Locale.getDefault())
+        addresses =
+            geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+        detailedEventFragmentBinding?.locationAddress?.text =
+            addresses[0].getAddressLine(0) ?: "Unknown location"
     }
 
     companion object{
