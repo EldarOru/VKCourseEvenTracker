@@ -1,38 +1,25 @@
 package com.example.eventracker.presentation.fragments
 
-import android.Manifest
-import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.eventracker.R
 import com.example.eventracker.databinding.AddEventFragmentBinding
 import com.example.eventracker.presentation.viewmodels.AddEventFragmentViewModel
 import com.example.eventracker.presentation.viewmodels.ViewModelFactory
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import java.lang.RuntimeException
 
 
 class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
@@ -70,12 +57,14 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
             val eventName: String = addEventFragmentBinding?.eventNameEt?.text.toString()
             val eventDescription: String = addEventFragmentBinding?.eventDescriptionEt?.text.toString()
             val date: String = addEventFragmentViewModel.checkDate(addEventFragmentBinding?.eventDateEt?.text.toString())
+            val time: String = addEventFragmentViewModel.checkTime(addEventFragmentBinding?.eventTimeEt?.text.toString())
             if (addEventFragmentViewModel.validateInput(eventName, eventDescription)) {
                 onFragmentsInteractionsListener.onAddBackStack("mapFragment",
                     MapFragment.newInstanceMapFragment(
                         date = date,
                         name = eventName,
-                        description = eventDescription
+                        description = eventDescription,
+                        time = time
                     )
                 )
             }
@@ -88,6 +77,10 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
         addEventFragmentViewModel.getFirebaseInfoLiveData().observe(viewLifecycleOwner){
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         }
+
+        addEventFragmentBinding?.eventTimeEt?.setOnClickListener {
+            showTimePickerDialog()
+        }
     }
 
     //TODO NORMAL DATE, NOT STRING
@@ -98,7 +91,16 @@ class AddEventFragment: Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
 
+    private fun showTimePickerDialog(){
+        val cal = Calendar.getInstance()
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+            cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            cal.set(Calendar.MINUTE, minute)
 
+            addEventFragmentBinding?.eventTimeEt?.text = SimpleDateFormat("HH:mm").format(cal.time)
+        }
+        TimePickerDialog(context,timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+    }
 
 
     private fun showDatePickerDialog() {

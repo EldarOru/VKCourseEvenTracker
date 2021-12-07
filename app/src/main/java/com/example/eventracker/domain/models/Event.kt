@@ -11,7 +11,8 @@ data class Event(
     val name: String = "",
     val description: String = "",
     val members: ArrayList<User> = arrayListOf(),
-    val eventPosition: LatLng = LatLng(-33.852, 151.211)
+    val eventPosition: LatLng = LatLng(-33.852, 151.211),
+    val time: String = ""
 ){
     companion object{
         const val UNDEFINED_KEY = "-1"

@@ -33,6 +33,8 @@ class DetailedEventFragment: Fragment(), OnMapReadyCallback {
     private lateinit var detailedEventFragmentViewModel: DetailedEventFragmentViewModel
     private var detailedEventFragmentBinding: DetailedEventFragmentBinding? = null
     private var eventKey: String = Event.UNDEFINED_KEY
+
+    //TODO исправить это недоразумение
     private var eL = MutableLiveData<LatLng>()
     private var mode = ""
 
@@ -72,6 +74,7 @@ class DetailedEventFragment: Fragment(), OnMapReadyCallback {
             detailedEventFragmentBinding?.apply {
             detailedNameEventTV.text = event?.name
             detailedDateEventTV.text = "This event will happen on " + event?.date
+            detailedTimeEventTV.text = "Time " + event?.time
             detailedDescriptionEventTV.text = event?.description
                 eL.value = event!!.eventPosition
         }
@@ -89,7 +92,7 @@ class DetailedEventFragment: Fragment(), OnMapReadyCallback {
         mode = requireArguments().getString(MODE_KEY) as String
     }
 
-    //TODO сделать асинхронным?
+    //TODO сделать асинхронным
     private fun getPositionAddress(latLng: LatLng){
         val addresses: MutableList<Address>
         val geocoder = Geocoder(context, Locale.getDefault())

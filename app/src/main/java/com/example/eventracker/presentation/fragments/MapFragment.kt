@@ -1,6 +1,7 @@
 package com.example.eventracker.presentation.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -42,6 +43,7 @@ class MapFragment: Fragment(), OnMapReadyCallback {
     private var eventName = ""
     private var eventDate = ""
     private var eventDescription = ""
+    private var eventTime = ""
     private var eventPosition: LatLng = LatLng(-33.852, 151.211)
 
 
@@ -71,7 +73,7 @@ class MapFragment: Fragment(), OnMapReadyCallback {
 
         mapFragmentBinding?.finishButton?.setOnClickListener {
             Log.d("POSITIONBUTTON", eventPosition.latitude.toString())
-            mapFragmentViewModel.createNewEvent(eventName, eventDescription, eventDate, eventPosition)
+            mapFragmentViewModel.createNewEvent(eventName, eventDescription, eventDate, eventPosition, eventTime)
             onFragmentsInteractionsListener.onPopBackStack()
         }
     }
@@ -84,7 +86,6 @@ class MapFragment: Fragment(), OnMapReadyCallback {
             mMap.clear()
             mMap.addMarker(MarkerOptions().position(it).title("Location"))
             eventPosition = it
-            Log.d("POSITION", eventPosition.latitude.toString())
         }
     }
 
@@ -108,13 +109,14 @@ class MapFragment: Fragment(), OnMapReadyCallback {
                         }
                         i++
                     }
-                    Log.d(MapFragment.TAG, "onRequestPermissionsResult: permission granted")
+                    Log.d(TAG, "onRequestPermissionsResult: permission granted")
                     mLocationPermissionsGranted = true
                 }
             }
         }
     }
 
+    @SuppressLint("VisibleForTests")
     private fun getLocation() {
         mLocationClient = FusedLocationProviderClient(activity)
 
@@ -143,11 +145,10 @@ class MapFragment: Fragment(), OnMapReadyCallback {
     }
 
     private fun initMap(){
-        if (mLocationPermissionsGranted) {
             val mapFragment = childFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
             mapFragment.getMapAsync(this)
-        }
+
     }
 
     private fun getLocationPermission() {
@@ -188,6 +189,7 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         eventName = args.getString(EVENT_NAME) ?: throw Exception("Smth is wrong")
         eventDescription = args.getString(EVENT_DESCRIPTION) ?: throw Exception("Smth is wrong")
         eventDate = args.getString(EVENT_DATE) ?: throw Exception("Smth is wrong")
+        eventTime = args.getString(EVENT_TIME) ?: throw Exception("Smth is wrong")
     }
 
     companion object{
@@ -200,15 +202,18 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         private const val EVENT_DATE = "event_date"
         private const val EVENT_NAME = "event_name"
         private const val EVENT_DESCRIPTION = "event_description"
+        private const val EVENT_TIME = "event_time"
 
         fun newInstanceMapFragment(date: String,
                                    name: String,
-                                   description: String): MapFragment{
+                                   description: String,
+                                   time: String): MapFragment{
             return MapFragment().apply {
                 arguments = Bundle().apply {
                     putString(EVENT_DATE, date)
                     putString(EVENT_NAME, name)
                     putString(EVENT_DESCRIPTION, description)
+                    putString(EVENT_TIME, time)
                 }
             }
         }

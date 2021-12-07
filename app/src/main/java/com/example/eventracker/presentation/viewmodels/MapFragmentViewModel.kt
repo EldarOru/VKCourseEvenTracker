@@ -14,14 +14,15 @@ class MapFragmentViewModel(
     private val getFirebaseInfoUseCase: GetFirebaseInfoUseCase
 ): ViewModel(){
 
-    fun createNewEvent(eventName: String, eventDescription: String, date: String, eventPosition: LatLng) {
+    fun createNewEvent(eventName: String, eventDescription: String, date: String, eventPosition: LatLng, eventTime: String) {
             viewModelScope.launch(Dispatchers.Main) {
                 createEventUseCase.createEvent(
                     Event(
                         name = eventName,
                         description = eventDescription,
                         date = date,
-                        eventPosition = eventPosition
+                        eventPosition = eventPosition,
+                        time = eventTime
                     )
                 )
             }

@@ -1,13 +1,10 @@
 package com.example.eventracker.presentation.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.*
-import com.example.eventracker.data.GeneralRepositoryImpl
-import com.example.eventracker.domain.models.Event
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.eventracker.domain.usecases.CreateEventUseCase
 import com.example.eventracker.domain.usecases.GetFirebaseInfoUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -64,6 +61,14 @@ class AddEventFragmentViewModel(
 
         return if (s == "Click here to choose date")
             dateFormat.format(gregorianCalendar.time)
+        else s
+    }
+
+    fun checkTime(s: String): String{
+        val dateFormat = SimpleDateFormat("HH:mm")
+
+        return if (s == "Click here to choose time")
+            dateFormat.format(Date())
         else s
     }
 

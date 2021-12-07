@@ -26,4 +26,9 @@
     <string name="deny_invite">Deny invite</string>
     <string name="create">Create</string>
     <string name="next">Next</string>
+    <string name="create_new_event">Create new event</string>
+    <string name="description">Description</string>
+    <string name="click_here_to_choose_date">Click here to choose date</string>
+    <string name="name">Name</string>
+    <string name="click_here_to_choose_time">Click here to choose time</string>
 </resources>

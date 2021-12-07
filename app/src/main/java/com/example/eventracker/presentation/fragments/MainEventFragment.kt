@@ -51,6 +51,7 @@ class MainEventFragment: Fragment() {
 
         mainFragmentViewModel.getUserLiveDatabase().observe(viewLifecycleOwner){
             eventListAdapter.list = it.listOfEvents
+            mainEventFragmentBinding?.userNameTv?.text = "Hello " + it.login
         }
 
         mainEventFragmentBinding?.buttonAddEvent?.setOnClickListener {

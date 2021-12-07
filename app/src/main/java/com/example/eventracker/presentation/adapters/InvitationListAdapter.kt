@@ -28,7 +28,7 @@ class InvitationListAdapter: RecyclerView.Adapter<InvitationListAdapter.EventInv
         holder.eventInviteBinding.eventInviteNameEt.text = event.name
         holder.eventInviteBinding.eventInviteDateEt.text = event.date
         holder.eventInviteBinding.eventInviteDescriptionEt.text = event.description
-
+        holder.eventInviteBinding.eventTimeEt.text = event.time
         holder.eventInviteBinding.root.setOnClickListener {
             onShopItemClickListener?.invoke(event)
         }

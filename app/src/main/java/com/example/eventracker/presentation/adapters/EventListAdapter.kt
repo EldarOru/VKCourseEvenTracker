@@ -27,6 +27,7 @@ class EventListAdapter: RecyclerView.Adapter<EventListAdapter.EventItemViewHolde
         holder.eventBinding.eventNameEt.text = event.name
         holder.eventBinding.eventDateEt.text = event.date
         holder.eventBinding.eventDescriptionEt.text = event.description
+        holder.eventBinding.eventTimeEt.text = event.time
         holder.eventBinding.root.setOnClickListener {
             onShopItemClickListener?.invoke(event)
         }
