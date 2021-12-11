@@ -11,45 +11,33 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="1dp"
     app:cardUseCompatPadding="true"
-    >
+    android:theme="@style/EventCard">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#3F51B5"
         android:orientation="vertical"
         android:padding="16dp">
-
         <TextView
-            android:textColor="@color/white"
             android:id="@+id/event_name_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             tools:text="Событие">
-
         </TextView>
-
         <TextView
-            android:textColor="@color/white"
             android:id="@+id/event_date_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Дата">
-
         </TextView>
-
         <TextView
-            android:textColor="@color/white"
             android:id="@+id/event_time_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Время">
-
         </TextView>
-
         <TextView
-            android:textColor="@color/white"
             android:id="@+id/event_description_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +52,6 @@
 Аптека, улица, фонарь."
             android:ellipsize="end"
             android:lines="2">
-
         </TextView>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -3,13 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#9C27B0">
-
+    xmlns:tools="http://schemas.android.com/tools">
     <TextView
-
         android:textSize="30sp"
-        android:textColor="@color/white"
         android:textStyle="bold"
         android:id="@+id/user_name_tv"
         android:layout_width="wrap_content"
@@ -31,6 +27,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:theme="@style/Theme.EvenTracker.FloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_add_event"
@@ -40,8 +37,7 @@
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@android:drawable/ic_menu_edit">
-
+        android:src="@drawable/ic_baseline_add_24">
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
