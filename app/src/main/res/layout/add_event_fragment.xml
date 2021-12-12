@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="30dp">
-
     <TextView
         android:id="@+id/create_new_event_tv"
         android:layout_width="match_parent"
@@ -14,9 +13,7 @@
         android:textSize="40sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-       />
-
+        app:layout_constraintTop_toTopOf="parent"/>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_marginTop="60dp"
         android:id="@+id/event_name_til"
@@ -34,9 +31,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:maxLength="25"/>
-
     </com.google.android.material.textfield.TextInputLayout>
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_description_til"
         style="@style/Theme.EvenTracker.TextInput"
@@ -48,55 +43,44 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_name_til"
         app:layout_constraintBottom_toTopOf="@+id/event_date_et">
-
         <com.google.android.material.textfield.TextInputEditText
             android:maxLines="1"
             android:lines="1"
             android:id="@+id/event_description_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
     </com.google.android.material.textfield.TextInputLayout>
-
     <TextView
+        style="@style/Theme.EvenTracker.ButtonDate"
         android:id="@+id/event_date_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="16sp"
+        android:layout_marginTop="22dp"
         android:padding="16dp"
         android:text="@string/click_here_to_choose_date"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_description_til"
-
-        android:background="@drawable/create_new_event_date_bg"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/event_description_til"/>
     <TextView
+        style="@style/Theme.EvenTracker.ButtonDate"
         android:id="@+id/event_time_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="16sp"
+        android:layout_marginTop="22dp"
         android:padding="16dp"
         android:text="@string/click_here_to_choose_time"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_date_et"
-
-        android:background="@drawable/create_new_event_date_bg"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/event_date_et" />
     <Button
-        android:layout_marginTop="60dp"
+        style="@style/Theme.EvenTracker.Button"
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="32sp"
         android:text="@string/next"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
-
     </Button>
 </androidx.constraintlayout.widget.ConstraintLayout>

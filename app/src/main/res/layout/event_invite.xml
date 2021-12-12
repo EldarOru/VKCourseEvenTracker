@@ -11,39 +11,31 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="1dp"
     app:cardUseCompatPadding="true"
-    android:theme="@style/EventCard">
-
+    android:theme="@style/Theme.EvenTracker.EventCard">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
-
         <TextView
             android:id="@+id/event_invite_name_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             tools:text="Событие">
-
         </TextView>
-
         <TextView
             android:id="@+id/event_invite_date_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Дата">
-
         </TextView>
-
         <TextView
             android:id="@+id/event_time_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Время">
-
         </TextView>
-
         <TextView
             android:id="@+id/event_invite_description_et"
             android:layout_width="match_parent"
@@ -59,7 +51,6 @@
 Аптека, улица, фонарь."
             android:ellipsize="end"
             android:lines="2">
-
         </TextView>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -79,17 +70,14 @@
                 app:layout_constraintTop_toTopOf="@+id/left_arrow"
                 android:text="@string/accept_invite"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
+                android:layout_height="wrap_content" />
             <TextView
                 app:layout_constraintRight_toLeftOf="@+id/right_arrow"
                 app:layout_constraintTop_toTopOf="@+id/right_arrow"
                 app:layout_constraintBottom_toBottomOf="@+id/right_arrow"
                 android:text="@string/deny_invite"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
             <ImageView
                 android:id="@+id/right_arrow"
                 app:layout_constraintTop_toTopOf="parent"
@@ -99,8 +87,5 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_arrow_forward_24"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </LinearLayout>
-
-
 </androidx.cardview.widget.CardView>

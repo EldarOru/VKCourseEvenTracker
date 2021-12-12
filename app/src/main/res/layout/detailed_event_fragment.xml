@@ -3,11 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#6A1D77">
-
+    xmlns:tools="http://schemas.android.com/tools">
     <TextView
-
+        style="@style/Theme.EvenTracker.DetailedEventHeader"
         android:gravity="center"
         android:id="@+id/detailed_name_eventTV"
         android:layout_width="match_parent"
@@ -15,14 +13,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
-        tools:text="Событие"
-        android:background="#3F51B5"/>
-
+        tools:text="Событие"/>
     <TextView
-        android:textColor="@color/white"
+        style="@style/Theme.EvenTracker.DetailedEventHeader"
         tools:text="Событие"
         android:textSize="20sp"
         android:id="@+id/detailed_date_eventTV"
@@ -31,11 +26,9 @@
         app:layout_constraintTop_toBottomOf="@id/detailed_name_eventTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintVertical_chainStyle="spread"
-        android:background="#3F51B5"/>
-
+        app:layout_constraintVertical_chainStyle="spread"/>
     <TextView
-        android:textColor="@color/white"
+        style="@style/Theme.EvenTracker.DetailedEventHeader"
         tools:text="Событие"
         android:textSize="20sp"
         android:id="@+id/detailed_time_eventTV"
@@ -44,34 +37,23 @@
         app:layout_constraintTop_toBottomOf="@id/detailed_date_eventTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintVertical_chainStyle="spread"
-        android:background="#3F51B5"/>
-
-
+        app:layout_constraintVertical_chainStyle="spread"/>
     <ScrollView
-        android:background="#9C27B0"
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@id/location_address"
         app:layout_constraintTop_toBottomOf="@id/detailed_time_eventTV">
-
         <TextView
-            android:textColor="@color/white"
             android:id="@+id/detailed_description_eventTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             tools:text="Событие">
-
         </TextView>
     </ScrollView>
-
     <TextView
-
-        android:textColor="@color/white"
-        android:background="#6A1D77"
         android:gravity="center"
         android:textSize="20sp"
         android:id="@+id/location_address"
@@ -80,9 +62,7 @@
         app:layout_constraintBottom_toTopOf="@id/detailed_map"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll_view"
-        />
-
+        app:layout_constraintTop_toBottomOf="@id/scroll_view"/>
     <fragment
         android:layout_margin="10dp"
         android:id="@+id/detailed_map"
@@ -93,5 +73,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location_address"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

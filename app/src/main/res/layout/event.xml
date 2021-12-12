@@ -11,7 +11,7 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="1dp"
     app:cardUseCompatPadding="true"
-    android:theme="@style/EventCard">
+    android:theme="@style/Theme.EvenTracker.EventCard">
 
     <LinearLayout
         android:layout_width="match_parent"
