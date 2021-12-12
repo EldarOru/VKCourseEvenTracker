@@ -56,6 +56,8 @@ class RegistrationFragment: Fragment() {
 
         registrationFragmentViewModel.getFirebaseInfoLiveData().observe(viewLifecycleOwner){
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+            //TODO исправить
+            if (it == "Success") onFragmentsInteractionsListener.onPopBackStack()
         }
 
         registrationFragmentBinding?.confirmRegisterButton?.setOnClickListener {

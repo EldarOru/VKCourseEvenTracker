@@ -22,23 +22,6 @@ class AddEventFragmentViewModel(
     val errorDescription: LiveData<Boolean>
         get() = _errorDescription
 
-    /*
-    fun createNewEvent(eventName: String, eventDescription: String, date: String) {
-        val validateData = validateInput(eventName, eventDescription)
-        if (validateData) {
-            viewModelScope.launch(Dispatchers.Main) {
-                createEventUseCase.createEvent(
-                    Event(
-                        name = eventName,
-                        description = eventDescription,
-                        date = date
-                    )
-                )
-            }
-        }
-    }
-     */
-
     fun validateInput(name: String, description: String): Boolean {
         var flag = true
         if (name.isBlank()) {
