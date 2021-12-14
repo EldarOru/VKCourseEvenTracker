@@ -14,12 +14,9 @@
         android:gravity="center"
         android:text="Sign up"
         android:textSize="40sp"
-        android:layout_marginBottom="550dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
+        app:layout_constraintRight_toRightOf="parent"/>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/registration_name_til"
         style="@style/Theme.EvenTracker.TextInput"
@@ -31,7 +28,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/registration_email_til"
         app:layout_constraintVertical_chainStyle="packed">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name_et"
             android:layout_width="match_parent"
@@ -51,7 +47,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/registration_password_til"
         app:layout_constraintVertical_chainStyle="packed">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_et"
             android:layout_width="match_parent"
@@ -71,7 +66,6 @@
         app:layout_constraintTop_toBottomOf="@+id/registration_email_til"
         app:layout_constraintBottom_toTopOf="@+id/registration_password_repeat_til"
         app:layout_constraintVertical_chainStyle="packed">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_et"
             android:inputType="textPassword"
@@ -90,7 +84,6 @@
         app:layout_constraintTop_toBottomOf="@+id/registration_password_til"
         app:layout_constraintBottom_toTopOf="@+id/confirm_register_button"
         app:layout_constraintVertical_chainStyle="packed">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/repeat_password_et"
             android:inputType="textPassword"
@@ -99,8 +92,8 @@
             android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
     <Button
+        style="@style/Theme.EvenTracker.Button"
         android:layout_marginTop="20dp"
-        android:textSize="32sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="confirm"
@@ -111,14 +104,11 @@
         app:layout_constraintBottom_toTopOf="@+id/backLoginActivity"
         app:layout_constraintVertical_chainStyle="packed"/>
     <Button
+        style="@style/Theme.EvenTracker.BottomButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Click here to sign in"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
         android:id="@+id/backLoginActivity"
-        android:textSize="13sp"
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

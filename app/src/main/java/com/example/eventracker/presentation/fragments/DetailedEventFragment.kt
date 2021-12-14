@@ -73,8 +73,8 @@ class DetailedEventFragment: Fragment(), OnMapReadyCallback {
         val event = detailedEventFragmentViewModel.event.value
             detailedEventFragmentBinding?.apply {
             detailedNameEventTV.text = event?.name
-            detailedDateEventTV.text = "This event will happen on " + event?.date
-            detailedTimeEventTV.text = "Time " + event?.time
+            detailedDateEventTV.text = event?.date
+            detailedTimeEventTV.text = event?.time
             detailedDescriptionEventTV.text = event?.description
                 eL.value = event!!.eventPosition
         }
