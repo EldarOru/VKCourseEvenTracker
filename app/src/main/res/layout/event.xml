@@ -12,7 +12,6 @@
     app:cardElevation="1dp"
     app:cardUseCompatPadding="true"
     android:theme="@style/Theme.EvenTracker.EventCard">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,18 +24,49 @@
             android:gravity="center"
             tools:text="Событие">
         </TextView>
-        <TextView
-            android:id="@+id/event_date_et"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Дата">
-        </TextView>
-        <TextView
-            android:id="@+id/event_time_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Время">
-        </TextView>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <ImageView
+                android:id="@+id/icon_date"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_calendar_month_24"/>
+            <TextView
+                android:layout_marginLeft="8dp"
+                android:id="@+id/event_date_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Дата"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/icon_date"
+                app:layout_constraintBottom_toBottomOf="parent">
+            </TextView>
+            <ImageView
+                android:id="@+id/icon_time"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/event_time_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_access_time_24"
+                android:layout_marginRight="8dp"/>
+            <TextView
+                android:id="@+id/event_time_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Время"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+            </TextView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <TextView
             android:id="@+id/event_description_et"
             android:layout_width="match_parent"
@@ -51,7 +81,7 @@
 Ночь, ледяная рябь канала,
 Аптека, улица, фонарь."
             android:ellipsize="end"
-            android:lines="2">
+            android:lines="1">
         </TextView>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
